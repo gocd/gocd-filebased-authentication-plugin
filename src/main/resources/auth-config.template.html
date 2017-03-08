@@ -1,0 +1,5 @@
+<div class="form_item_block">
+    <label ng-class="{'is-invalid-label': GOINPUTNAME[PasswordFilePath].$error.server}">Password file path:<span class='asterix'>*</span></label>
+    <input ng-class="{'is-invalid-input': GOINPUTNAME[PasswordFilePath].$error.server}" type="text" ng-model="PasswordFilePath" ng-required="true" placeholder="/etc/go/password.properties"/>
+    <span class="form_error form-error" ng-class="{'is-visible': GOINPUTNAME[PasswordFilePath].$error.server}" ng-show="GOINPUTNAME[PasswordFilePath].$error.server">{{GOINPUTNAME[PasswordFilePath].$error.server}}</span>
+</div>

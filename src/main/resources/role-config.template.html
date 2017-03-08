@@ -1,0 +1,5 @@
+<div class="form_item_block">
+  <label ng-class="{'is-invalid-label': GOINPUTNAME[ExampleField].$error.server}">Example Field</label>
+  <textarea ng-class="{'is-invalid-input': GOINPUTNAME[ExampleField].$error.server}" type="text" ng-model="ExampleField" ng-required="true" placeholder="value"></textarea>
+  <span class="form_error form-error" ng-class="{'is-visible': GOINPUTNAME[ExampleField].$error.server}" ng-show="GOINPUTNAME[ExampleField].$error.server">{{GOINPUTNAME[ExampleField].$error.server}}</span>
+</div>
