@@ -17,9 +17,9 @@
 package cd.go.authentication.passwordfile.executor;
 
 import cd.go.authentication.passwordfile.annotation.MetadataHelper;
+import cd.go.authentication.passwordfile.annotation.ProfileMetadata;
 import cd.go.authentication.passwordfile.model.Configuration;
 import cd.go.authentication.passwordfile.utils.Util;
-import cd.go.authentication.passwordfile.annotation.ProfileMetadata;
 import com.google.gson.Gson;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import org.hamcrest.Matchers;
@@ -28,7 +28,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class GetAuthConfigViewExecutorTest {

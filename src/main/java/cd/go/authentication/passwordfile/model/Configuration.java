@@ -16,9 +16,9 @@
 
 package cd.go.authentication.passwordfile.model;
 
+import cd.go.authentication.passwordfile.annotation.MetadataHelper;
 import cd.go.authentication.passwordfile.annotation.ProfileField;
 import cd.go.authentication.passwordfile.utils.Util;
-import cd.go.authentication.passwordfile.annotation.MetadataHelper;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
