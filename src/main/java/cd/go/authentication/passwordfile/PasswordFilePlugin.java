@@ -58,6 +58,14 @@ public class PasswordFilePlugin implements GoPlugin {
                     return new UserAuthenticationExecutor(request, new Authenticator()).execute();
                 case REQUEST_SEARCH_USERS:
                     return new SearchUserExecutor(request).execute();
+                case REQUEST_GET_ROLE_CONFIG_METADATA:
+                    return new NoOpExecutor().execute();
+                case REQUEST_ROLE_CONFIG_VIEW:
+                    return new NoOpExecutor().execute();
+                case REQUEST_VALIDATE_ROLE_CONFIG:
+                    return new NoOpExecutor().execute();
+                case REQUEST_VERIFY_CONNECTION:
+                    return new NoOpExecutor().execute();
                 default:
                     throw new UnhandledRequestTypeException(request.requestName());
             }
