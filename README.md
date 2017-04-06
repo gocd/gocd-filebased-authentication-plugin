@@ -10,7 +10,7 @@ If your SHA1 algorithm and base 64 encoding works properly, the password "badger
 
 You can put as many username/hashed password pairs as you like -- use a new line for each one
 
-The plugin needs to be configured to use the password file, by providing the configuration in cruise_config.xml
+The plugin needs to be configured to use the password file, by providing the configuration `<authConfigs>` under `<security/>` tag.
 
 * Example Auth Config
 ```xml
