@@ -30,18 +30,13 @@ public class Capabilities {
     private final boolean canSearch;
 
     @Expose
-    @SerializedName("can_verify_connection")
-    private final boolean canVerifyConnection;
-
-    @Expose
     @SerializedName("can_authorize")
     private final boolean canAuthorize;
 
 
-    public Capabilities(SupportedAuthType supportedAuthType, boolean canSearch, boolean canVerifyConnection, boolean canAuthorize) {
+    public Capabilities(SupportedAuthType supportedAuthType, boolean canSearch, boolean canAuthorize) {
         this.supportedAuthType = supportedAuthType;
         this.canSearch = canSearch;
-        this.canVerifyConnection = canVerifyConnection;
         this.canAuthorize = canAuthorize;
     }
 

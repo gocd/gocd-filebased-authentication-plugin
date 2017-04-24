@@ -17,7 +17,7 @@
 apply plugin: 'java'
 
 group = 'cd.go'
-version = '0.0.1'
+version = '0.0.1-SNAPSHOT'
 
 project.ext.pluginDesc = [
   id         : 'cd.go.authentication.passwordfile',

@@ -34,7 +34,6 @@ public class GetCapabilitiesExecutorTest {
         String expectedJSON = "{\n" +
                 "    \"supported_auth_type\":\"password\",\n" +
                 "    \"can_search\":true,\n" +
-                "    \"can_verify_connection\":false,\n" +
                 "    \"can_authorize\":false\n" +
                 "}";
 
