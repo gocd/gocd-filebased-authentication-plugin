@@ -52,6 +52,8 @@ public class PasswordFilePlugin implements GoPlugin {
                     return new GetAuthConfigMetadataExecutor().execute();
                 case REQUEST_AUTH_CONFIG_VIEW:
                     return new GetAuthConfigViewExecutor().execute();
+                case REQUEST_VERIFY_CONNECTION:
+                    return new VerifyConnectionRequestExecutor(request).execute();
                 case REQUEST_VALIDATE_AUTH_CONFIG:
                     return new AuthConfigValidateRequestExecutor(request).execute();
                 case REQUEST_AUTHENTICATE_USER:
