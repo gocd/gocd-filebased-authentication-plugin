@@ -17,6 +17,7 @@
 package cd.go.authentication.passwordfile.executor;
 
 import cd.go.authentication.passwordfile.Authenticator;
+import cd.go.authentication.passwordfile.PasswordFilePlugin;
 import cd.go.authentication.passwordfile.exception.AuthenticationException;
 import cd.go.authentication.passwordfile.model.AuthConfig;
 import cd.go.authentication.passwordfile.model.Credentials;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
 import static com.thoughtworks.go.plugin.api.response.DefaultGoApiResponse.SUCCESS_RESPONSE_CODE;
 
 public class UserAuthenticationExecutor implements RequestExecutor {
@@ -57,6 +59,7 @@ public class UserAuthenticationExecutor implements RequestExecutor {
 
             return new DefaultGoPluginApiResponse(SUCCESS_RESPONSE_CODE, GSON.toJson(userMap));
         } catch (AuthenticationException e) {
+            LOG.error(String.format("[Authenticate] Failed to authenticate user: `%s`", credentials.getUsername()), e);
             return new DefaultGoPluginApiResponse(SUCCESS_RESPONSE_CODE, GSON.toJson(userMap));
         }
     }

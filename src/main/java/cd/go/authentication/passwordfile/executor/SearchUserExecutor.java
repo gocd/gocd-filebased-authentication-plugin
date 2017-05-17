@@ -16,6 +16,7 @@
 
 package cd.go.authentication.passwordfile.executor;
 
+import cd.go.authentication.passwordfile.PasswordFilePlugin;
 import cd.go.authentication.passwordfile.PasswordFileReader;
 import cd.go.authentication.passwordfile.model.AuthConfig;
 import cd.go.authentication.passwordfile.model.User;
@@ -26,6 +27,8 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
 import java.io.IOException;
 import java.util.*;
+
+import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
 
 public class SearchUserExecutor implements RequestExecutor {
     public static final String SEARCH_TERM = "search_term";
@@ -55,7 +58,13 @@ public class SearchUserExecutor implements RequestExecutor {
     Set<User> searchUsers(String searchTerm, List<AuthConfig> authConfigs) throws IOException {
         final HashSet<User> users = new HashSet<>();
         for (AuthConfig authConfig : authConfigs) {
-            users.addAll(search(searchTerm, authConfig));
+            try {
+                LOG.info(String.format("[User Search] Looking up for users matching search_term: `%s`" +
+                        " using auth_config: `%s`", searchTerm, authConfig.getId()));
+                users.addAll(search(searchTerm, authConfig));
+            } catch (Exception e) {
+                LOG.error(String.format("[User Search] Error while searching users with auth_config: '%s'", authConfig.getId()), e);
+            }
         }
         return users;
     }

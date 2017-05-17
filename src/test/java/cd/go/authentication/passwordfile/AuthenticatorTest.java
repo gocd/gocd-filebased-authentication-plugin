@@ -121,6 +121,21 @@ public class AuthenticatorTest {
     }
 
     @Test
+    public void shouldNotErrorOutIfAuthenticationUsingAAuthConfigThrowsException() throws Exception {
+        Credentials credentials = new Credentials("username", "password");
+        AuthConfig authConfig1 = AuthConfigMother.authConfigWith("/var/etc/password_1.properties");
+        AuthConfig authConfig2 = AuthConfigMother.authConfigWith("/var/etc/password_2.properties");
+
+        when(passwordFileReader.read(authConfig1.getConfiguration().getPasswordFilePath())).thenThrow(new RuntimeException());
+
+        final Properties validProperties = new Properties();
+        validProperties.put("username", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+        when(passwordFileReader.read(authConfig2.getConfiguration().getPasswordFilePath())).thenReturn(validProperties);
+
+        authenticator.authenticate(credentials, Arrays.asList(authConfig1, authConfig2));
+    }
+
+    @Test
     public void shouldAuthenticateUserAgainstASingleAuthConfigInCaseOfMultipleAuthConfigs() throws Exception {
         Credentials credentials = new Credentials("username", "password");
         AuthConfig authConfig1 = AuthConfigMother.authConfigWith("/var/etc/password_1.properties");

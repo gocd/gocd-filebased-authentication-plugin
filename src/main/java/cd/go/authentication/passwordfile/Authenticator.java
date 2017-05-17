@@ -28,6 +28,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
+import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
+
 public class Authenticator {
     final PasswordFileReader passwordFileReader;
 
@@ -42,17 +44,23 @@ public class Authenticator {
     public User authenticate(Credentials credentials, List<AuthConfig> authConfigs) throws IOException, NoSuchAlgorithmException {
 
         for (AuthConfig authConfig : authConfigs) {
-            final String passwordFilePath = authConfig.getConfiguration().getPasswordFilePath();
-            final Properties usernamePassword = passwordFileReader.read(passwordFilePath);
+            LOG.info(String.format("[Authenticate] Authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()));
+            try {
+                final String passwordFilePath = authConfig.getConfiguration().getPasswordFilePath();
+                final Properties usernamePassword = passwordFileReader.read(passwordFilePath);
 
-            if (!usernamePassword.containsKey(credentials.getUsername())) {
-                continue;
-            }
+                if (!usernamePassword.containsKey(credentials.getUsername())) {
+                    continue;
+                }
 
-            final String password = stripShaFromPasswordIfRequired(usernamePassword.getProperty(credentials.getUsername()));
+                final String password = stripShaFromPasswordIfRequired(usernamePassword.getProperty(credentials.getUsername()));
 
-            if (password.equals(sha1Digest(credentials.getPassword().getBytes()))) {
-                return new User(credentials.getUsername(), null, null);
+                if (password.equals(sha1Digest(credentials.getPassword().getBytes()))) {
+                    LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth_config: %s", credentials.getUsername(), authConfig.getId()));
+                    return new User(credentials.getUsername(), null, null);
+                }
+            } catch (Exception e) {
+                LOG.error(String.format("[Authenticate] Error authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()), e);
             }
         }
 
