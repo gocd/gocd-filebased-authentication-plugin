@@ -58,7 +58,21 @@ public class AuthenticatorTest {
 
         final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));
 
-        assertThat(user, is(new User("username", null, null)));
+        assertThat(user, is(new User("username", "username", null)));
+    }
+
+    @Test
+    public void authenticate_shouldMakeCaseInsensitiveMatchOfUsername() throws Exception {
+        Credentials credentials = new Credentials("username", "password");
+        AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
+        final Properties properties = new Properties();
+
+        properties.put("USERnamE", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+        when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
+
+        final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+
+        assertThat(user, is(new User("USERnamE", "USERnamE", null)));
     }
 
     @Test
@@ -72,7 +86,7 @@ public class AuthenticatorTest {
 
         final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));
 
-        assertThat(user, is(new User("username", null, null)));
+        assertThat(user, is(new User("username", "username", null)));
     }
 
     @Test

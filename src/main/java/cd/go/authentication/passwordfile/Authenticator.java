@@ -24,9 +24,7 @@ import cd.go.authentication.passwordfile.model.User;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
 
@@ -47,17 +45,18 @@ public class Authenticator {
             LOG.info(String.format("[Authenticate] Authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()));
             try {
                 final String passwordFilePath = authConfig.getConfiguration().getPasswordFilePath();
-                final Properties usernamePassword = passwordFileReader.read(passwordFilePath);
+                Map<String, UserDetails> userMap = buildUserMap(passwordFileReader.read(passwordFilePath));
+                UserDetails userDetails = userMap.get(credentials.getUsername().toLowerCase());
 
-                if (!usernamePassword.containsKey(credentials.getUsername())) {
+                if (userDetails == null) {
                     continue;
                 }
 
-                final String password = stripShaFromPasswordIfRequired(usernamePassword.getProperty(credentials.getUsername()));
+                final String password = stripShaFromPasswordIfRequired(userDetails.password);
 
                 if (password.equals(sha1Digest(credentials.getPassword().getBytes()))) {
                     LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth_config: %s", credentials.getUsername(), authConfig.getId()));
-                    return new User(credentials.getUsername(), null, null);
+                    return new User(userDetails.username, userDetails.username, null);
                 }
             } catch (Exception e) {
                 LOG.error(String.format("[Authenticate] Error authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()), e);
@@ -77,5 +76,28 @@ public class Authenticator {
     private String sha1Digest(byte[] bytes) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA1");
         return Base64.getEncoder().encodeToString(md.digest(bytes));
+    }
+
+    private Map<String, UserDetails> buildUserMap(Properties props) {
+        HashMap<String, UserDetails> userMap = new HashMap<>();
+
+        Iterator<Object> iterator = props.keySet().iterator();
+        while (iterator.hasNext()) {
+            String username = (String) iterator.next();
+            String password = props.getProperty(username);
+
+            userMap.put(username.toLowerCase(), new UserDetails(username, password));
+        }
+        return userMap;
+    }
+
+    private class UserDetails {
+        private final String username;
+        private final String password;
+
+        public UserDetails(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
     }
 }
