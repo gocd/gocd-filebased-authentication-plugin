@@ -16,13 +16,23 @@
 
 apply plugin: 'java'
 
+def gitRevision = { ->
+  def hashStdOut = new ByteArrayOutputStream()
+  exec {
+    commandLine "git", "log", "-n", "1", "--format=%H"
+    standardOutput = hashStdOut
+    workingDir = project.projectDir
+  }
+
+  return hashStdOut.toString().trim()
+}
+
 group = 'cd.go'
-version = '0.0.1-SNAPSHOT'
 
 project.ext.pluginDesc = [
   id         : 'cd.go.authentication.passwordfile',
-  version    : project.version,
-  goCdVersion: '17.3.0',
+  version    : gitRevision(),
+  goCdVersion: '17.5.0',
   name       : 'Password File Authentication Plugin for GoCD',
   description: 'GoCD Authorization plugin for file based password authentication',
   vendorName : 'GoCD Contributors',
@@ -64,6 +74,16 @@ processResources {
 }
 
 jar {
+  manifest {
+    attributes(
+      'Go-Version': project.pluginDesc.goCdVersion,
+      'Plugin-Revision': project.pluginDesc.version,
+      'Implementation-Title': project.name,
+      'Source-Compatibility': project.sourceCompatibility,
+      'Target-Compatibility': project.targetCompatibility
+    )
+  }
+
   from(configurations.compile) {
     into "lib/"
   }
