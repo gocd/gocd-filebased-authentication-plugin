@@ -1,5 +1,14 @@
-# GoCD Password File Authentication Plugin
-This plugin is a password file based authentication plugin. This allows authentication/search of users defined across multiple password files.  
+# GoCD File Based Authentication Plugin
+This is a file based authentication plugin which implements the GoCD [Authorization Plugin](https://plugin-api.gocd.io/current/authorization/) endpoint. This plugin allows authentication/search of users defined in a sinlge or across multiple password files.
+
+## Building the code base
+To build the jar, run `./gradlew clean test assemble`
+
+## Requirements
+These plugins require GoCD version v17.5 or above.
+
+## Installation
+- From GoCD ```17.5.0``` onwards the plugin comes bundled along with server, hence a separate installation is not required.
 
 ## Usage instructions
 The simplest way to use this plugin is create a plain text file with the following format:
@@ -10,9 +19,12 @@ If your SHA1 algorithm and base 64 encoding works properly, the password "badger
 
 You can put as many username/hashed password pairs as you like -- use a new line for each one
 
-The plugin needs to be configured to use the password file, by providing the configuration `<authConfigs>` under `<security/>` tag.
+The plugin needs to be configured to use the password file. The configuration can be added by adding a Authorization Configuration
+by visiting the Authorization Configuration page under Admin/Security.
 
-* Example Auth Config
+Alternatively, the configuration can be added directly to the `config.xml` using the `<authConfig>` configuration.
+
+* Example Configuration
 ```xml
 <authConfigs>
   <authConfig id="auth-config-id" pluginId="cd.go.authentication.passwordfile">
@@ -25,7 +37,7 @@ The plugin needs to be configured to use the password file, by providing the con
 ```
 
 The plugin can also be configured to use multiple password files if required.
-* Example Auth Config
+* Example Configuration
 ```xml
 <authConfigs>
   <authConfig id="auth-config-id-1" pluginId="cd.go.authentication.passwordfile">
@@ -42,6 +54,31 @@ The plugin can also be configured to use multiple password files if required.
   </authConfig>
 </authConfigs>
 ```
+
+## Generating passwords using htpasswd
+You can use the [htpasswd](http://httpd.apache.org/docs/2.0/programs/htpasswd.html) program from Apache to manage your password file. You must use the -s option with htpasswd to force it to use SHA1 encoding for the password. So for example, you can use the following command to create a password file called "passwd" and put the password for the user "user" in it:
+
+```htpasswd -c -s passwd user```
+
+### htpasswd on Windows
+
+htpasswd is not available on windows, but there are plenty of websites that perform the encryption for free. Make sure you use the SHA1 algorithm.
+
+### htpasswd on Mac OSX
+
+htpasswd is already installed by default on Mac OSX.
+
+### htpasswd on Linux
+
+Debian based distributions (e.g. Ubuntu) htpasswd can be installed from the apache2-utils
+
+```$ apt-get install apache2-utils```
+
+###Generating passwords using python
+
+Another option is to use the following command (assumes python is installed on your system)
+
+```$ python -c "import sha;from base64 import b64encode;print b64encode(sha.new('my-password').digest())"```
 
 ## Building the code base
 
