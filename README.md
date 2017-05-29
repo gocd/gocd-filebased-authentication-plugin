@@ -22,6 +22,8 @@ The simplest way to use this plugin is create a plain text file with the followi
     
 If your SHA1 algorithm and base 64 encoding works properly, the password "badger" should come out as "ThmbShxAtJepX80c2JY1FzOEmUk=".
 
+> **Note**: This is currently an insecure default, the industry standard recommendation is to use `bcrypt` or `PBKDF2` algorithm. See [#13](https://github.com/gocd/filebased-authentication-plugin/issues/13) for details.   
+
 You can put as many username/hashed password pairs as you like -- use a new line for each one
 
 The plugin needs to be configured to use the password file. The configuration can be added by adding a Authorization Configuration by visiting the Authorization Configuration page under *Admin > Security*.
