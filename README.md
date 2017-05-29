@@ -1,16 +1,21 @@
 # GoCD File Based Authentication Plugin
+
 This is a file based authentication plugin which implements the GoCD [Authorization Plugin](https://plugin-api.gocd.io/current/authorization/) endpoint. This plugin allows authentication/search of users defined in a sinlge or across multiple password files.
 
 ## Building the code base
+
 To build the jar, run `./gradlew clean test assemble`
 
 ## Requirements
+
 These plugins require GoCD version v17.5 or above.
 
 ## Installation
-- From GoCD ```17.5.0``` onwards the plugin comes bundled along with server, hence a separate installation is not required.
+
+- From GoCD `17.5.0` onwards the plugin comes bundled along with server, hence a separate installation is not required.
 
 ## Usage instructions
+
 The simplest way to use this plugin is create a plain text file with the following format:
 
     [username]:[password hashed with SHA1 and encoded with base 64]
@@ -56,9 +61,16 @@ The plugin can also be configured to use multiple password files if required.
 ```
 
 ## Generating passwords using htpasswd
-You can use the [htpasswd](http://httpd.apache.org/docs/2.0/programs/htpasswd.html) program from Apache to manage your password file. You must use the -s option with htpasswd to force it to use SHA1 encoding for the password. So for example, you can use the following command to create a password file called "passwd" and put the password for the user "user" in it:
 
-```htpasswd -c -s passwd user```
+You can use the [htpasswd](http://httpd.apache.org/docs/2.0/programs/htpasswd.html) program from Apache to manage your password file.
+
+You must use the -s option with htpasswd to force it to use SHA1 encoding for the password.
+
+So for example, you can use the following command to create a password file called "passwd" and put the password for the user "user" in it:
+
+```shell
+ htpasswd -c -s passwd user
+ ```
 
 ### htpasswd on Windows
 
@@ -72,17 +84,29 @@ htpasswd is already installed by default on Mac OSX.
 
 Debian based distributions (e.g. Ubuntu) htpasswd can be installed from the apache2-utils
 
-```$ apt-get install apache2-utils```
+```shell
+$ apt-get install apache2-utils
+```
 
-###Generating passwords using python
+### Generating passwords using python
 
 Another option is to use the following command (assumes python is installed on your system)
 
-```$ python -c "import sha;from base64 import b64encode;print b64encode(sha.new('my-password').digest())"```
+  ```python
+  $ python -c "import sha;
+  from base64 import b64encode;
+  print b64encode(sha.new('my-password').digest())"
+  ```
 
 ## Building the code base
 
 To build the jar, run `./gradlew clean test assemble`
+
+## Note
+
+This plugin is a as-is replacement for GoCD support for file based authentication. SHA1 is considered insecure and not recommended.
+A file based [strong auth plugin](https://github.com/danielsomerfield/go-strong-auth-plugin#go-strong-auth-plugin) was built using the deprecated Authentication endpoints, any contributions towards building a secure file based plugin would be appreciated.
+
 
 ## License
 
