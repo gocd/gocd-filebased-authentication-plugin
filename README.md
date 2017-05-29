@@ -24,41 +24,41 @@ If your SHA1 algorithm and base 64 encoding works properly, the password "badger
 
 You can put as many username/hashed password pairs as you like -- use a new line for each one
 
-The plugin needs to be configured to use the password file. The configuration can be added by adding a Authorization Configuration
-by visiting the Authorization Configuration page under Admin/Security.
+The plugin needs to be configured to use the password file. The configuration can be added by adding a Authorization Configuration by visiting the Authorization Configuration page under *Admin > Security*.
 
 Alternatively, the configuration can be added directly to the `config.xml` using the `<authConfig>` configuration.
 
 * Example Configuration
-```xml
-<authConfigs>
-  <authConfig id="auth-config-id" pluginId="cd.go.authentication.passwordfile">
-    <property>
-      <key>PasswordFilePath</key>
-      <value>path-to-password-file</value>
-    </property>
-  </authConfig>
-</authConfigs>
-```
 
-The plugin can also be configured to use multiple password files if required.
-* Example Configuration
-```xml
-<authConfigs>
-  <authConfig id="auth-config-id-1" pluginId="cd.go.authentication.passwordfile">
-    <property>
-      <key>PasswordFilePath</key>
-      <value>path-to-password-file-1</value>
-    </property>
-  </authConfig>
-  <authConfig id="auth-config-id-2" pluginId="cd.go.authentication.passwordfile">
-    <property>
-      <key>PasswordFilePath</key>
-      <value>path-to-password-file-2</value>
-    </property>
-  </authConfig>
-</authConfigs>
-```
+    ```xml
+    <authConfigs>
+      <authConfig id="auth-config-id" pluginId="cd.go.authentication.passwordfile">
+        <property>
+          <key>PasswordFilePath</key>
+          <value>path-to-password-file</value>
+        </property>
+      </authConfig>
+    </authConfigs>
+    ```
+
+* The plugin can also be configured to use multiple password files if required:
+
+    ```xml
+    <authConfigs>
+      <authConfig id="auth-config-id-1" pluginId="cd.go.authentication.passwordfile">
+        <property>
+          <key>PasswordFilePath</key>
+          <value>path-to-password-file-1</value>
+        </property>
+      </authConfig>
+      <authConfig id="auth-config-id-2" pluginId="cd.go.authentication.passwordfile">
+        <property>
+          <key>PasswordFilePath</key>
+          <value>path-to-password-file-2</value>
+        </property>
+      </authConfig>
+    </authConfigs>
+    ```
 
 ## Generating passwords using htpasswd
 
@@ -69,8 +69,8 @@ You must use the -s option with htpasswd to force it to use SHA1 encoding for th
 So for example, you can use the following command to create a password file called "passwd" and put the password for the user "user" in it:
 
 ```shell
- htpasswd -c -s passwd user
- ```
+htpasswd -c -s passwd user
+```
 
 ### htpasswd on Windows
 
@@ -92,15 +92,9 @@ $ apt-get install apache2-utils
 
 Another option is to use the following command (assumes python is installed on your system)
 
-  ```python
-  $ python -c "import sha;
-  from base64 import b64encode;
-  print b64encode(sha.new('my-password').digest())"
-  ```
-
-## Building the code base
-
-To build the jar, run `./gradlew clean test assemble`
+```shell
+$ python -c "import sha; from base64 import b64encode; print b64encode(sha.new('my-password').digest())"
+```
 
 ## Note
 
