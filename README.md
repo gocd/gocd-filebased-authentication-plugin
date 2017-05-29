@@ -74,7 +74,7 @@ htpasswd -c -s passwd user
 
 ### htpasswd on Windows
 
-htpasswd is not available on windows, but there are plenty of websites that perform the encryption for free. Make sure you use the SHA1 algorithm.
+The `htpasswd` executable may be downloaded as part of the apache distribution from [Apache Haus](http://www.apachehaus.com/cgi-bin/download.plx) or [Apache Lounge](https://www.apachelounge.com/download/). Note that these executables may not work on Windows XP or Server 2003
 
 ### htpasswd on Mac OSX
 
