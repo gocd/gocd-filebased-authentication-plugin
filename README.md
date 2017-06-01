@@ -103,6 +103,38 @@ $ python -c "import sha; from base64 import b64encode; print b64encode(sha.new('
 This plugin is a as-is replacement for GoCD support for file based authentication. SHA1 is considered insecure and not recommended.
 A file based [strong auth plugin](https://github.com/danielsomerfield/go-strong-auth-plugin#go-strong-auth-plugin) was built using the deprecated Authentication endpoints, any contributions towards building a secure file based plugin would be appreciated.
 
+## Troubleshooting
+
+### Verify Connection
+
+For a given Authorization Configuration verify if the given password file can be accessed by the plugin. The Authorization Configuration page under *Admin > Security* gives an option to verify connection.
+
+### Enable Debug Logs
+
+* On Linux:
+
+    Enabling debug level logging can help you troubleshoot an issue with this plugin. To enable debug level logs, edit the file `/etc/default/go-server` (for Linux) to add:
+
+    ```shell
+    export GO_SERVER_SYSTEM_PROPERTIES="$GO_SERVER_SYSTEM_PROPERTIES -Dplugin.cd.go.authentication.passwordfile.log.level=debug"
+    ```
+
+    If you're running the server via `./server.sh` script:
+
+    ```shell
+    $ GO_SERVER_SYSTEM_PROPERTIES="-Dplugin.cd.go.authentication.passwordfile.log.level=debug" ./server.sh
+    ```
+
+* On windows:
+
+    Edit the file `config/wrapper-properties.conf` inside the GoCD Server installation directory (typically `C:\Program Files\Go Server`):
+
+    ```
+    # config/wrapper-properties.conf
+    # since the last "wrapper.java.additional" index is 15, we use the next available index.
+    wrapper.java.additional.16=-Dplugin.cd.go.authentication.passwordfile.log.level=debug
+    ```
+
 ## License
 
 ```plain
