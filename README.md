@@ -98,11 +98,10 @@ Another option is to use the following command (assumes python is installed on y
 $ python -c "import sha; from base64 import b64encode; print b64encode(sha.new('my-password').digest())"
 ```
 
-## Note
+## Limitations
 
 This plugin is a as-is replacement for GoCD support for file based authentication. SHA1 is considered insecure and not recommended.
 A file based [strong auth plugin](https://github.com/danielsomerfield/go-strong-auth-plugin#go-strong-auth-plugin) was built using the deprecated Authentication endpoints, any contributions towards building a secure file based plugin would be appreciated.
-
 
 ## License
 
