@@ -48,12 +48,54 @@ public class AuthenticatorTest {
     }
 
     @Test
-    public void shouldAuthenticate() throws Exception {
+    public void shouldAuthenticateSHA1HashedPassword() throws Exception {
         Credentials credentials = new Credentials("username", "password");
         AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
         final Properties properties = new Properties();
 
         properties.put("username", "W6ph5Mm5Pz8GgiULbPgzG37mj9g=");
+        when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
+
+        final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+
+        assertThat(user, is(new User("username", "username", null)));
+    }
+
+    @Test
+    public void shouldAuthenticateBCryptHashedPassword2YFormat() throws Exception {
+        Credentials credentials = new Credentials("username", "password");
+        AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
+        final Properties properties = new Properties();
+
+        properties.put("username", "$2y$12$ctTt.M5B/A4EuehlSgOLcugsPP4nu01aNPWI6nZpX6w8Z6SHa5d72");
+        when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
+
+        final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+
+        assertThat(user, is(new User("username", "username", null)));
+    }
+
+    @Test
+    public void shouldAuthenticateBCryptHashedPassword2AFormat() throws Exception {
+        Credentials credentials = new Credentials("username", "password");
+        AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
+        final Properties properties = new Properties();
+
+        properties.put("username", "$2a$10$TpJTztc1Qpzpwd.HVjBvG.HlVLMYdMak1JYyi7yZQ6NC/aLgYiQpi");
+        when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
+
+        final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+
+        assertThat(user, is(new User("username", "username", null)));
+    }
+
+    @Test
+    public void shouldAuthenticateBCryptHashedPassword2bFormat() throws Exception {
+        Credentials credentials = new Credentials("username", "password");
+        AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
+        final Properties properties = new Properties();
+
+        properties.put("username", "$2b$12$GhvMmNVjRW29ulnudl.LbuAnUtN/LRfe1JsBm1Xu6LE3059z5Tr8m");
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
 
         final User user = authenticator.authenticate(credentials, Collections.singletonList(authConfig));

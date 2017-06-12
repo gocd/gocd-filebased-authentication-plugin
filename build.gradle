@@ -93,3 +93,29 @@ jar {
     into "/"
   }
 }
+
+test {
+  outputs.upToDateWhen { false }
+  testLogging {
+    showStandardStreams = project.path != ':server'
+
+    exceptionFormat 'full'
+
+    beforeSuite { suite ->
+      if (suite.parent) {
+        logger.quiet("Running ${suite.name}")
+      }
+    }
+
+    afterSuite { suite, result ->
+      if (suite.parent) {
+        logger.quiet("Tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
+        if (result.resultType == TestResult.ResultType.FAILURE) {
+          logger.quiet("Test ${suite.name} FAILED")
+        }
+      } else {
+        logger.quiet("Total tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
+      }
+    }
+  }
+}
