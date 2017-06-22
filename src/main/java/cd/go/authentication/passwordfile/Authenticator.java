@@ -20,6 +20,7 @@ import cd.go.authentication.passwordfile.exception.AuthenticationException;
 import cd.go.authentication.passwordfile.model.AuthConfig;
 import cd.go.authentication.passwordfile.model.Credentials;
 import cd.go.authentication.passwordfile.model.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -55,7 +56,11 @@ public class Authenticator {
                 final String password = stripShaFromPasswordIfRequired(userDetails.password);
 
                 if (password.equals(sha1Digest(credentials.getPassword().getBytes()))) {
-                    LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth_config: %s", credentials.getUsername(), authConfig.getId()));
+                    LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth config: %s", credentials.getUsername(), authConfig.getId()));
+                    LOG.info(String.format("[Authenticate] User `%s`'s password is hashed using SHA1. Please use bcrypt hasing instead.", credentials.getUsername()));
+                    return new User(userDetails.username, userDetails.username, null);
+                } else if (BCrypt.checkpw(credentials.getPassword(), password.replaceFirst("^\\$2y\\$", "\\$2a\\$").replaceFirst("^\\$2b\\$", "\\$2a\\$"))) {
+                    LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth config: %s", credentials.getUsername(), authConfig.getId()));
                     return new User(userDetails.username, userDetails.username, null);
                 }
             } catch (Exception e) {
