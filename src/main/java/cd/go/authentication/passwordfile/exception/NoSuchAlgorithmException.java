@@ -16,12 +16,12 @@
 
 package cd.go.authentication.passwordfile.exception;
 
-public class AuthenticationException extends RuntimeException {
-    public AuthenticationException(String message) {
+public class NoSuchAlgorithmException extends RuntimeException {
+    public NoSuchAlgorithmException(String message) {
         super(message);
     }
 
-    public AuthenticationException(Exception cause) {
-        super(cause);
+    public NoSuchAlgorithmException(java.security.NoSuchAlgorithmException e) {
+        super(e);
     }
 }

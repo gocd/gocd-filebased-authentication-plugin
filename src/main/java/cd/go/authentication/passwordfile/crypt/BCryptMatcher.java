@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package cd.go.authentication.passwordfile.exception;
+package cd.go.authentication.passwordfile.crypt;
 
-public class AuthenticationException extends RuntimeException {
-    public AuthenticationException(String message) {
-        super(message);
+import org.mindrot.jbcrypt.BCrypt;
+
+public class BCryptMatcher implements HashMatcher {
+
+    @Override
+    public boolean matches(String plainText, String hashed) {
+        final String processedHash = hashed.replaceFirst("^\\$2y\\$", "\\$2a\\$").replaceFirst("^\\$2b\\$", "\\$2a\\$");
+        return BCrypt.checkpw(plainText, processedHash);
     }
 
-    public AuthenticationException(Exception cause) {
-        super(cause);
-    }
 }

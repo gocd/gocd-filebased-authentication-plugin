@@ -16,12 +16,8 @@
 
 package cd.go.authentication.passwordfile.exception;
 
-public class AuthenticationException extends RuntimeException {
-    public AuthenticationException(String message) {
+public class InvalidFormatException extends RuntimeException {
+    public InvalidFormatException(String message) {
         super(message);
-    }
-
-    public AuthenticationException(Exception cause) {
-        super(cause);
     }
 }
