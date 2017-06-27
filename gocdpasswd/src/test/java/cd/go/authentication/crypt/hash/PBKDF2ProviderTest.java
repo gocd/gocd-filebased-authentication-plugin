@@ -49,6 +49,18 @@ public class PBKDF2ProviderTest {
 
         final String hash = provider.hash(cliArguments);
 
-        assertThat(hash, is("admin=$PBKDF2WithHmacSHA1$1000$256$812A9B665D09904B8239778EC8D18CF7$093763ff7f9a2e279940ffb89b341a4dde5780e7046f248ba36ff9a9f5a5e79e"));
+        assertThat(hash, is("admin=$PBKDF2WithHmacSHA1$1000$256$812A9B665D09904B8239778EC8D18CF7$093763FF7F9A2E279940FFB89B341A4DDE5780E7046F248BA36FF9A9F5A5E79E"));
+    }
+
+    @Test
+    public void shouldGeneratePasswordFileEntryUsingPBKDF2WithHmacSHA256() throws Exception {
+        when(cliArguments.algorithm()).thenReturn(Algorithm.PBKDF2WithHmacSHA256);
+        when(cliArguments.iterations()).thenReturn(2000);
+        when(cliArguments.keyLength()).thenReturn(512);
+        when(cliArguments.salt()).thenReturn("812A9B665D09904B8239778EC8D18CF7");
+
+        final String hash = provider.hash(cliArguments);
+
+        assertThat(hash, is("admin=$PBKDF2WithHmacSHA256$2000$512$812A9B665D09904B8239778EC8D18CF7$CE4952378009E7706F3E5B8DF33DEE6CCC53448460CB093353DF04800A22BD412F5F2F76BDBD1EACE832534B1BEC5F96FC115261967F67864D187D5860DB0470"));
     }
 }

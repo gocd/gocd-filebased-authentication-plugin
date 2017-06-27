@@ -20,7 +20,7 @@ import cd.go.authentication.crypt.CliArguments;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.math.BigInteger;
+import javax.xml.bind.DatatypeConverter;
 
 import static java.lang.String.format;
 
@@ -32,22 +32,11 @@ public class PBKDF2Provider implements HashProvider {
             PBEKeySpec keySpec = new PBEKeySpec(cliArguments.password().toCharArray(), cliArguments.salt().getBytes(), cliArguments.iterations(), cliArguments.keyLength());
             SecretKeyFactory factory = SecretKeyFactory.getInstance(cliArguments.algorithm().getName());
 
-            final String hashedPasswd = toHex(factory.generateSecret(keySpec).getEncoded());
+            final String hashedPasswd = DatatypeConverter.printHexBinary(factory.generateSecret(keySpec).getEncoded());
 
             return format("%s=$%s$%s$%s$%s$%s", cliArguments.username(), cliArguments.algorithm().getName(), cliArguments.iterations(), cliArguments.keyLength(), cliArguments.salt(), hashedPasswd);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private String toHex(byte[] array) {
-        BigInteger bi = new BigInteger(1, array);
-        String hex = bi.toString(16);
-        int paddingLength = (array.length * 2) - hex.length();
-        if (paddingLength > 0) {
-            return format("%0" + paddingLength + "d", 0) + hex;
-        } else {
-            return hex;
         }
     }
 }
