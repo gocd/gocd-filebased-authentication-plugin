@@ -16,3 +16,5 @@
 
 rootProject.name = 'filebased-authentication-plugin'
 include 'gocdpasswd'
+include 'bcrypt'
+
