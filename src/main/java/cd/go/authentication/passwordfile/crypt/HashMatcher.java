@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package cd.go.authentication.passwordfile.exception;
+package cd.go.authentication.passwordfile.crypt;
 
-public class AuthenticationException extends RuntimeException {
-    public AuthenticationException(String message) {
-        super(message);
-    }
-
-    public AuthenticationException(Exception cause) {
-        super(cause);
-    }
+public interface HashMatcher {
+    boolean matches(String plainText, String hashed);
 }

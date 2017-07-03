@@ -16,14 +16,13 @@
 
 package cd.go.authentication.passwordfile;
 
+import cd.go.authentication.passwordfile.crypt.Algorithm;
 import cd.go.authentication.passwordfile.exception.AuthenticationException;
 import cd.go.authentication.passwordfile.model.AuthConfig;
 import cd.go.authentication.passwordfile.model.Credentials;
 import cd.go.authentication.passwordfile.model.User;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -31,13 +30,15 @@ import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
 
 public class Authenticator {
     final PasswordFileReader passwordFileReader;
+    private final AlgorithmIdentifier algorithmIdentifier;
 
     public Authenticator() {
-        this(new PasswordFileReader());
+        this(new PasswordFileReader(), new AlgorithmIdentifier());
     }
 
-    public Authenticator(PasswordFileReader passwordFileReader) {
+    public Authenticator(PasswordFileReader passwordFileReader, AlgorithmIdentifier algorithmIdentifier) {
         this.passwordFileReader = passwordFileReader;
+        this.algorithmIdentifier = algorithmIdentifier;
     }
 
     public User authenticate(Credentials credentials, List<AuthConfig> authConfigs) throws IOException, NoSuchAlgorithmException {
@@ -53,13 +54,13 @@ public class Authenticator {
                     continue;
                 }
 
-                final String password = stripShaFromPasswordIfRequired(userDetails.password);
+                Algorithm algorithm = algorithmIdentifier.identify(userDetails.password);
 
-                if (password.equals(sha1Digest(credentials.getPassword().getBytes()))) {
-                    LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth config: %s", credentials.getUsername(), authConfig.getId()));
-                    LOG.info(String.format("[Authenticate] User `%s`'s password is hashed using SHA1. Please use bcrypt hasing instead.", credentials.getUsername()));
-                    return new User(userDetails.username, userDetails.username, null);
-                } else if (BCrypt.checkpw(credentials.getPassword(), password.replaceFirst("^\\$2y\\$", "\\$2a\\$").replaceFirst("^\\$2b\\$", "\\$2a\\$"))) {
+                if (algorithm == Algorithm.SHA1) {
+                    LOG.info(String.format("[Authenticate] User `%s`'s password is hashed using SHA1. Please use bcrypt hashing instead.", credentials.getUsername()));
+                }
+
+                if (algorithm.matcher().matches(credentials.getPassword(), userDetails.password)) {
                     LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth config: %s", credentials.getUsername(), authConfig.getId()));
                     return new User(userDetails.username, userDetails.username, null);
                 }
@@ -69,18 +70,6 @@ public class Authenticator {
         }
 
         throw new AuthenticationException("Unable to authenticate user, user not found or bad credentials");
-    }
-
-    private String stripShaFromPasswordIfRequired(String password) {
-        if (password.startsWith("{SHA}")) {
-            return password.substring(5);
-        }
-        return password;
-    }
-
-    private String sha1Digest(byte[] bytes) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA1");
-        return Base64.getEncoder().encodeToString(md.digest(bytes));
     }
 
     private Map<String, UserDetails> buildUserMap(Properties props) {
