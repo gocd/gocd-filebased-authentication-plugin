@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-rootProject.name = 'filebased-authentication-plugin'
-include 'gocdpasswd'
-include 'bcrypt'
+package cd.go.authentication.crypt;
 
+public class InvalidArgumentException extends RuntimeException {
+    public InvalidArgumentException(String message) {
+        super(message);
+    }
+}

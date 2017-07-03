@@ -14,7 +14,21 @@
  * limitations under the License.
  */
 
-rootProject.name = 'filebased-authentication-plugin'
-include 'gocdpasswd'
-include 'bcrypt'
+package cd.go.authentication.crypt.hash;
 
+import cd.go.authentication.crypt.CliArguments;
+import org.mindrot.jbcrypt.BCrypt;
+
+import static java.text.MessageFormat.format;
+
+public class BCryptProvider implements HashProvider {
+
+    @Override
+    public String hash(CliArguments arguments) {
+        final String salt = BCrypt.gensalt(arguments.cost());
+
+        final String hashedPasswd = BCrypt.hashpw(arguments.password(), salt);
+
+        return format("{0}={1}", arguments.username(), hashedPasswd);
+    }
+}
