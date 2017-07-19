@@ -16,7 +16,6 @@
 
 package cd.go.authentication.passwordfile.executor;
 
-import cd.go.authentication.passwordfile.PasswordFilePlugin;
 import cd.go.authentication.passwordfile.PasswordFileReader;
 import cd.go.authentication.passwordfile.model.AuthConfig;
 import cd.go.authentication.passwordfile.model.User;
