@@ -136,6 +136,21 @@ subprojects {
   }
 }
 
+github {
+  owner = System.getenv('GITHUB_USER') ?: 'bob'
+  repo = 'filebased-authentication-plugin'
+  token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
+  tagName = PLUGIN_VERSION
+  targetCommitish = project.gitRevision
+  body = """
+      # Version ${fullVersion}
+
+      See release notes at https://github.com/${github.owner}/${github.repo}/blob/master/CHANGELOG.md#${github.tagName}
+    """.stripIndent()
+  assets = project(':gocdpasswd').checksumJar.outputs.files + project(':gocdpasswd').jar.archivePath +
+    project(':gocd-filebased-authentication-plugin').checksumJar.outputs.files + project(':gocd-filebased-authentication-plugin').jar.archivePath
+}
+
 static def checksum(File file, String algorithm) {
   def digester = MessageDigest.getInstance(algorithm)
   file.eachByte(8192) { bfr, num ->
