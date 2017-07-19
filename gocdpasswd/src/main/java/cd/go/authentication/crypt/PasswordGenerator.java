@@ -18,6 +18,8 @@ package cd.go.authentication.crypt;
 
 import com.beust.jcommander.JCommander;
 
+import java.io.File;
+
 import static java.lang.String.format;
 
 public class PasswordGenerator {
@@ -50,10 +52,19 @@ public class PasswordGenerator {
 
     void printUsageAndExit(int exitCode, CliArguments cliArguments) {
         StringBuilder out = new StringBuilder();
+
         JCommander jCommander = new JCommander(cliArguments);
-        jCommander.setProgramName("java -jar gopasswd.jar");
+        jCommander.setProgramName("java -jar " + jarName());
         jCommander.usage(out);
         System.err.println(out);
         System.exit(exitCode);
+    }
+
+    private String jarName() {
+        return new File(getClass().getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .getPath())
+                    .getName();
     }
 }
