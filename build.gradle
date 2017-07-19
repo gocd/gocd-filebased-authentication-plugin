@@ -14,109 +14,132 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
+import java.security.MessageDigest
+
+plugins {
+  id 'co.riiid.gradle' version '0.4.2'
+}
 
 def gitRevision = { ->
   def hashStdOut = new ByteArrayOutputStream()
   exec {
     commandLine "git", "log", "-n", "1", "--format=%H"
     standardOutput = hashStdOut
-    workingDir = project.projectDir
   }
 
   return hashStdOut.toString().trim()
 }
 
-group = 'cd.go'
+def releaseRevision = { ->
+  def hashStdOut = new ByteArrayOutputStream()
+  exec {
+    commandLine "git", "log", "--pretty=format:"
+    standardOutput = hashStdOut
+  }
 
-project.ext.pluginDesc = [
-  id         : 'cd.go.authentication.passwordfile',
-  version    : gitRevision(),
-  goCdVersion: '17.5.0',
-  name       : 'Password File Authentication Plugin for GoCD',
-  description: 'GoCD Authorization plugin for file based password authentication',
-  vendorName : 'GoCD Contributors',
-  vendorUrl  : 'https://github.com/gocd-contrib/filebased-authentication-plugin'
-]
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-  jcenter()
-  mavenLocal()
+  return hashStdOut.size().toString()
 }
 
-dependencies {
-  compileOnly group: 'cd.go.plugin', name: 'go-plugin-api', version: '17.2.0'
-  compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
-  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-  compile group: 'commons-io', name: 'commons-io', version: '2.5'
-  compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
-  compile project(':bcrypt')
+def PLUGIN_VERSION = '1.0.0'
+def DIST_VERSION = releaseRevision()
+def GIT_REVISION = gitRevision()
 
-  testCompile group: 'cd.go.plugin', name: 'go-plugin-api', version: '16.11.0'
-  testCompile group: 'junit', name: 'junit', version: '4.12'
-  testCompile group: 'org.mockito', name: 'mockito-core', version: '2.2.28'
-  testCompile group: 'org.hamcrest', name: 'hamcrest-library', version: '1.3'
-  testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.4.0'
+allprojects {
+  project.ext.distVersion = DIST_VERSION
+  project.ext.fullVersion = DIST_VERSION ? "${PLUGIN_VERSION}-${DIST_VERSION}" : PLUGIN_VERSION
+  project.ext.gitRevision = GIT_REVISION
+  project.ext.pluginDesc = [
+    id         : 'cd.go.authentication.passwordfile',
+    version    : project.fullVersion,
+    goCdVersion: '17.5.0',
+    name       : 'Password File Authentication Plugin for GoCD',
+    description: 'GoCD Authorization plugin for file based password authentication',
+    vendorName : 'GoCD Contributors',
+    vendorUrl  : 'https://github.com/gocd/filebased-authentication-plugin'
+  ]
+
+  group = 'cd.go'
+  version = project.fullVersion
 }
 
-processResources {
-  from("src/main/resource-templates") {
-    filesMatching('plugin.xml') {
-      expand project.pluginDesc
+subprojects {
+  apply plugin: 'java'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  repositories {
+    jcenter()
+    mavenLocal()
+  }
+
+  tasks.withType(Jar) {
+    finalizedBy 'checksumJar'
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
+    manifest {
+      attributes(
+        'Go-Version': project.pluginDesc.goCdVersion,
+        'Plugin-Revision': project.pluginDesc.version,
+        'Implementation-Title': project.name,
+        'Implementation-Version': project.version,
+        'Source-Compatibility': project.sourceCompatibility,
+        'Target-Compatibility': project.targetCompatibility
+      )
     }
-
-    filesMatching('plugin.properties') {
-      expand project.pluginDesc
-    }
-  }
-}
-
-jar {
-  manifest {
-    attributes(
-      'Go-Version': project.pluginDesc.goCdVersion,
-      'Plugin-Revision': project.pluginDesc.version,
-      'Implementation-Title': project.name,
-      'Source-Compatibility': project.sourceCompatibility,
-      'Target-Compatibility': project.targetCompatibility
-    )
   }
 
-  from(configurations.compile) {
-    into "lib/"
+  tasks.withType(JavaCompile) { compileTask ->
+    options.encoding = "UTF-8"
   }
 
-//    This is useful for debugging
-  from(sourceSets.main.java) {
-    into "/"
-  }
-}
+  tasks.withType(Test) {
+    outputs.upToDateWhen { false }
+    testLogging {
+      showStandardStreams = project.path != ':server'
 
-test {
-  outputs.upToDateWhen { false }
-  testLogging {
-    showStandardStreams = project.path != ':server'
+      exceptionFormat 'full'
 
-    exceptionFormat 'full'
-
-    beforeSuite { suite ->
-      if (suite.parent) {
-        logger.quiet("Running ${suite.name}")
-      }
-    }
-
-    afterSuite { suite, result ->
-      if (suite.parent) {
-        logger.quiet("Tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
-        if (result.resultType == TestResult.ResultType.FAILURE) {
-          logger.quiet("Test ${suite.name} FAILED")
+      beforeSuite { suite ->
+        if (suite.parent) {
+          logger.quiet("Running ${suite.name}")
         }
-      } else {
-        logger.quiet("Total tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
+      }
+
+      afterSuite { suite, result ->
+        if (suite.parent) {
+          logger.quiet("Tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
+          if (result.resultType == TestResult.ResultType.FAILURE) {
+            logger.quiet("Test ${suite.name} FAILED")
+          }
+        } else {
+          logger.quiet("Total tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
+        }
       }
     }
   }
+
+  task checksumJar {
+    def md5 = project.file("${jar.archivePath}.MD5")
+    def sha1 = project.file("${jar.archivePath}.SHA1")
+    def sha256 = project.file("${jar.archivePath}.SHA256")
+
+    inputs.files(jar.archivePath)
+    outputs.files(md5)
+    outputs.files(sha1)
+    outputs.files(sha256)
+    doFirst {
+      md5.write("${checksum(jar.archivePath, 'MD5')}  ${jar.archivePath.name}\n")
+      sha1.write("${checksum(jar.archivePath, 'SHA-1')}  ${jar.archivePath.name}\n")
+      sha256.write("${checksum(jar.archivePath, 'SHA-256')}  ${jar.archivePath.name}\n")
+    }
+  }
+}
+
+static def checksum(File file, String algorithm) {
+  def digester = MessageDigest.getInstance(algorithm)
+  file.eachByte(8192) { bfr, num ->
+    digester.update(bfr, 0, num)
+  }
+  return digester.digest().encodeHex()
 }
