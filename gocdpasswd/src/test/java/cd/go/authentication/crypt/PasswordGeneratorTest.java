@@ -18,7 +18,7 @@ package cd.go.authentication.crypt;
 
 import org.junit.Test;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 

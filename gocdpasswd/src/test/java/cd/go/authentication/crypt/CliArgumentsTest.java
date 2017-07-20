@@ -59,7 +59,7 @@ public class CliArgumentsTest {
 
     @Test
     public void shouldErrorOutEncryptionAlgorithmIsNotSpecified() throws Exception {
-        thrown.expect(InvalidArgumentException.class);
+        thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Expected encryption algorithm: [-B, -P, -S]");
 
         String[] args = {"-u", "admin", "-p", "badger"};
@@ -69,7 +69,7 @@ public class CliArgumentsTest {
 
     @Test
     public void shouldErrorOutOnInvalidBCryptArguments() throws Exception {
-        thrown.expect(InvalidArgumentException.class);
+        thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument to -C must be an integer value: 4 to 31");
 
         String[] args = {"-B", "-u", "admin", "-p", "badger", "-C", "1"};

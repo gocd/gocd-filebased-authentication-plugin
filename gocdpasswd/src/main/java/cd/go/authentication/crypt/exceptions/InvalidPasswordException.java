@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package cd.go.authentication.crypt;
+package cd.go.authentication.crypt.exceptions;
 
-public class InvalidArgumentException extends RuntimeException {
-    public InvalidArgumentException(String message) {
+public class InvalidPasswordException extends RuntimeException {
+    public InvalidPasswordException(String message) {
         super(message);
     }
 }
