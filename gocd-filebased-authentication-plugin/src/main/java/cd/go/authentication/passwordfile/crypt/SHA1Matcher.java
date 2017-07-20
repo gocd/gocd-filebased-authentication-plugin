@@ -20,15 +20,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import static org.apache.commons.lang3.StringUtils.equalsAny;
-
 public class SHA1Matcher implements HashMatcher {
 
     @Override
     public boolean matches(String plainText, String hashed) {
         final String digest = sha1Digest(plainText.getBytes());
 
-        return equalsAny(hashed, digest, "{SHA}" + digest);
+        return hashed.equals(digest) || hashed.equals("{SHA}" + digest);
     }
 
     private String sha1Digest(byte[] bytes) {

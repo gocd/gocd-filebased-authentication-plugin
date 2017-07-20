@@ -20,8 +20,6 @@ import cd.go.authentication.crypt.hash.BCryptProvider;
 import cd.go.authentication.crypt.hash.HashProvider;
 import cd.go.authentication.crypt.hash.PBKDF2Provider;
 
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-
 
 public enum Algorithm {
     BCRYPT("BCRYPT") {
@@ -29,19 +27,18 @@ public enum Algorithm {
         public HashProvider hashProvider() {
             return new BCryptProvider();
         }
-
-    }, PBKDF2WithHmacSHA1("PBKDF2WithHmacSHA1") {
+    },
+    PBKDF2WithHmacSHA1("PBKDF2WithHmacSHA1") {
         @Override
         public HashProvider hashProvider() {
             return new PBKDF2Provider();
         }
-
-    }, PBKDF2WithHmacSHA256("PBKDF2WithHmacSHA256") {
+    },
+    PBKDF2WithHmacSHA256("PBKDF2WithHmacSHA256") {
         @Override
         public HashProvider hashProvider() {
             return new PBKDF2Provider();
         }
-
     };
 
     private final String name;
@@ -51,18 +48,6 @@ public enum Algorithm {
     }
 
     public abstract HashProvider hashProvider();
-
-    public static Algorithm fromString(String algorithm) {
-        if (equalsIgnoreCase(algorithm, BCRYPT.getName())) {
-            return BCRYPT;
-        } else if (equalsIgnoreCase(algorithm, PBKDF2WithHmacSHA1.getName())) {
-            return PBKDF2WithHmacSHA1;
-        } else if (equalsIgnoreCase(algorithm, PBKDF2WithHmacSHA256.getName())) {
-            return PBKDF2WithHmacSHA256;
-        }
-        //TODO:
-        throw new RuntimeException("No such algorithm");
-    }
 
     public String getName() {
         return name;

@@ -4,7 +4,7 @@
 
 ### Improved
 
-Reduced the size of the plugin from 1.2MB to 708KB by removing dependencies on utility code from apache commons. There are no functional changes from the previous release.
+Reduced the size of the plugin from 1.2MB to 300KB by removing dependencies on utility code from apache commons. There are no functional changes from the previous release.
 
 ## [005bbb2](https://github.com/gocd/filebased-authentication-plugin/commit/005bbb25e8abd444fdcb3fae1c311ccba53bb3c8) - Bundled with *GoCD v17.6.0*
 
