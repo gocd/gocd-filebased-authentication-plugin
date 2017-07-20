@@ -80,7 +80,7 @@ public class CliArguments {
             return Algorithm.PBKDF2WithHmacSHA256;
         }
 
-        throw new InvalidArgumentException("Expected encryption algorithm: [-B, -P, -S]");
+        throw new IllegalArgumentException("Expected encryption algorithm: [-B, -P, -S]");
     }
 
     public String username() {
@@ -121,7 +121,7 @@ public class CliArguments {
 
         if (algorithm() == Algorithm.BCRYPT) {
             if (cost < 4 || cost > 31) {
-                throw new InvalidArgumentException("Argument to -C must be an integer value: 4 to 31");
+                throw new IllegalArgumentException("Argument to -C must be an integer value: 4 to 31");
             }
         }
     }

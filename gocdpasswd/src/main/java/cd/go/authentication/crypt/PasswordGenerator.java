@@ -41,7 +41,7 @@ public class PasswordGenerator {
             printResult(hash);
 
         } catch (Exception e) {
-            System.err.println(format("\n%s", e.getMessage()));
+            System.err.println(format("\n%s\n", e.getCause() != null ? e.getCause().getMessage() : e.getMessage()));
             printUsageAndExit(1, new CliArguments());
         }
     }

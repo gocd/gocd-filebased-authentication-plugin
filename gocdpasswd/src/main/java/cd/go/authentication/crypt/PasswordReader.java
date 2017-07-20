@@ -25,7 +25,7 @@ public class PasswordReader {
             String newPassword = new String(console.readPassword("New password: "));
             String reTypePassword = new String(console.readPassword("Re-type new password: "));
 
-            if (newPassword.equals(reTypePassword)) {
+            if (isNotBlank(newPassword) && newPassword.equals(reTypePassword)) {
                 return newPassword;
             }
         } finally {
@@ -33,5 +33,9 @@ public class PasswordReader {
         }
 
         throw new RuntimeException("Password verification error.");
+    }
+
+    private boolean isNotBlank(String newPassword) {
+        return newPassword != null && !newPassword.trim().isEmpty();
     }
 }
