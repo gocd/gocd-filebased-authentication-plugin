@@ -138,7 +138,7 @@ subprojects {
 
 github {
   owner = System.getenv('GITHUB_USER') ?: 'bob'
-  repo = 'filebased-authentication-plugin'
+  repo = 'gocd-filebased-authentication-plugin'
   token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
   tagName = PLUGIN_VERSION
   targetCommitish = project.gitRevision

@@ -1,6 +1,10 @@
 # Changelog
 
-This plugin is bundled along with the GoCD server, hence there will be no separate release of the plugin. Any notable changes would be listed here against the git commit.
+## 1.0.0
+
+### Improved
+
+Reduced the size of the plugin from 1.2MB to 708KB by removing dependencies on utility code from apache commons. There are no functional changes from the previous release.
 
 ## [005bbb2](https://github.com/gocd/filebased-authentication-plugin/commit/005bbb25e8abd444fdcb3fae1c311ccba53bb3c8) - Bundled with *GoCD v17.6.0*
 
