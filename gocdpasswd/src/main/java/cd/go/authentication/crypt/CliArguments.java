@@ -21,8 +21,6 @@ import com.beust.jcommander.Parameter;
 
 import java.util.Random;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-
 public class CliArguments {
     private final PasswordReader passwordReader;
 
@@ -151,4 +149,18 @@ public class CliArguments {
     public boolean help() {
         return this.help;
     }
+
+    private boolean isBlank(final CharSequence cs) {
+        int strLen;
+        if (cs == null || (strLen = cs.length()) == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if (Character.isWhitespace(cs.charAt(i)) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

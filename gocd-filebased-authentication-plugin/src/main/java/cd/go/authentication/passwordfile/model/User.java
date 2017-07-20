@@ -19,7 +19,8 @@ package cd.go.authentication.passwordfile.model;
 import cd.go.authentication.passwordfile.exception.InvalidUsernameException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.apache.commons.lang3.StringUtils;
+
+import static cd.go.authentication.passwordfile.utils.Util.isBlank;
 
 public class User {
     @Expose
@@ -39,7 +40,7 @@ public class User {
         this.displayName = displayName;
         this.emailId = emailId == null ? null : emailId.toLowerCase().trim();
 
-        if (StringUtils.isBlank(this.username)) {
+        if (isBlank(this.username)) {
             throw new InvalidUsernameException("Username can not be blank.");
         }
     }

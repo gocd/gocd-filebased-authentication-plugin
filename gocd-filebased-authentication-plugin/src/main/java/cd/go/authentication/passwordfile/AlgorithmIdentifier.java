@@ -21,18 +21,17 @@ import cd.go.authentication.passwordfile.exception.NoSuchAlgorithmException;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.apache.commons.lang3.StringUtils.equalsAnyIgnoreCase;
-
 public class AlgorithmIdentifier {
     private static final Pattern PREFIX_PATTERN = Pattern.compile("\\$(\\w+)");
-    private static final Map<Algorithm, String[]> ALGORITHM_IDENTIFIER_PREFIXS = new HashMap() {{
-        put(Algorithm.BCRYPT, new String[]{"2A", "2Y", "2B"});
-        put(Algorithm.PBKDF2WithHmacSHA1, new String[]{"PBKDF2WithHmacSHA1"});
-        put(Algorithm.PBKDF2WithHmacSHA256, new String[]{"PBKDF2WithHmacSHA256"});
+    private static final Map<Algorithm, List<String>> ALGORITHM_IDENTIFIER_PREFIXS = new HashMap() {{
+        put(Algorithm.BCRYPT, Arrays.asList("2A", "2Y", "2B"));
+        put(Algorithm.PBKDF2WithHmacSHA1, Arrays.asList("PBKDF2WithHmacSHA1"));
+        put(Algorithm.PBKDF2WithHmacSHA256, Arrays.asList("PBKDF2WithHmacSHA256"));
     }};
 
     public Algorithm identify(String hash) {
@@ -42,11 +41,13 @@ public class AlgorithmIdentifier {
             final Matcher matcher = PREFIX_PATTERN.matcher(hash);
 
             if (matcher.find()) {
-
                 String algorithmPrefix = matcher.group(1);
 
-                return Arrays.asList(Algorithm.values()).stream()
-                        .filter(elem -> equalsAnyIgnoreCase(algorithmPrefix, ALGORITHM_IDENTIFIER_PREFIXS.get(elem)))
+                return Arrays.stream(Algorithm.values())
+                        .filter(elem -> {
+                            List<String> strings = ALGORITHM_IDENTIFIER_PREFIXS.get(elem);
+                            return strings != null && strings.stream().anyMatch(algorithmPrefix::equalsIgnoreCase);
+                        })
                         .findFirst()
                         .orElseThrow(() -> new NoSuchAlgorithmException("Failed to determine hashing algorithm."));
             }

@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static cd.go.authentication.passwordfile.utils.Util.isBlank;
 
 public class VerifyConnectionRequestExecutor implements RequestExecutor {
     private static final Gson GSON = new Gson();

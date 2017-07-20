@@ -22,8 +22,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
-
 public class PBKDF2Matcher implements HashMatcher {
 
     @Override
@@ -32,7 +30,7 @@ public class PBKDF2Matcher implements HashMatcher {
 
         String generatedHash = generateHash(plainText, hashInfo);
 
-        return equalsIgnoreCase(generatedHash, hashInfo.getHashedPassword());
+        return generatedHash.equalsIgnoreCase(hashInfo.getHashedPassword());
     }
 
     private String generateHash(String plainText, PBKDF2HashInfo hashInfo) {

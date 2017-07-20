@@ -22,17 +22,20 @@ public enum Algorithm {
         public HashMatcher matcher() {
             return new SHA1Matcher();
         }
-    }, BCRYPT("BCRYPT") {
+    },
+    BCRYPT("BCRYPT") {
         @Override
         public HashMatcher matcher() {
             return new BCryptMatcher();
         }
-    }, PBKDF2WithHmacSHA1("PBKDF2WithHmacSHA1") {
+    },
+    PBKDF2WithHmacSHA1("PBKDF2WithHmacSHA1") {
         @Override
         public HashMatcher matcher() {
             return new PBKDF2Matcher();
         }
-    }, PBKDF2WithHmacSHA256("PBKDF2WithHmacSHA256") {
+    },
+    PBKDF2WithHmacSHA256("PBKDF2WithHmacSHA256") {
         @Override
         public HashMatcher matcher() {
             return new PBKDF2Matcher();
