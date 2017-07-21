@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+### Improved
+
+Cleaned up the build script. No change in functionality.
+
 ## 1.0.0
 
 ### Improved
