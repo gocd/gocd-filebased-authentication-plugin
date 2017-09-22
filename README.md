@@ -41,8 +41,9 @@ You can use the [htpasswd](http://httpd.apache.org/docs/2.0/programs/htpasswd.ht
 So for example, you can use the following command to create a password file called `passwd` and put the password for the user "user" in it:
 
 ```shell
-htpasswd -c [-s] [-B] passwd user
+htpasswd -c -B passwd user
 ```
+Where, `-B` forces password hashing with bcrypt, currently considered to be very secure. You can also use `-s` for SHA or `-d` for crypt() but these are deemed insecure
 
 ### htpasswd on Windows
 
