@@ -18,14 +18,17 @@ package cd.go.authentication.passwordfile;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Properties;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PasswordFileReader {
 
     public Properties read(String passwordFilePath) throws IOException {
         final Properties properties = new Properties();
-        try (InputStream inputStream = new FileInputStream(passwordFilePath)) {
+        try (Reader inputStream = new InputStreamReader(new FileInputStream(passwordFilePath), UTF_8)) {
             properties.load(inputStream);
         }
         return properties;
