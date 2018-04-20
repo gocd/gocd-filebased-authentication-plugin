@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+### Bug fix
+
+- [#20](https://github.com/gocd/gocd-filebased-authentication-plugin/issues/20) - Use utf-8 to read password file
+
 ## 1.0.1
 
 ### Improved
