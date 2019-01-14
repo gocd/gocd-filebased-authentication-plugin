@@ -11,3 +11,4 @@ build/
 !gradle-wrapper.jar
 
 classes/
+out/

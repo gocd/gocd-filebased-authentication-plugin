@@ -44,7 +44,7 @@ public class Authenticator {
     public User authenticate(Credentials credentials, List<AuthConfig> authConfigs) throws IOException, NoSuchAlgorithmException {
 
         for (AuthConfig authConfig : authConfigs) {
-            LOG.info(String.format("[Authenticate] Authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()));
+            LOG.debug(String.format("[Authenticate] Authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()));
             try {
                 final String passwordFilePath = authConfig.getConfiguration().getPasswordFilePath();
                 Map<String, UserDetails> userMap = buildUserMap(passwordFileReader.read(passwordFilePath));
@@ -57,7 +57,7 @@ public class Authenticator {
                 Algorithm algorithm = algorithmIdentifier.identify(userDetails.password);
 
                 if (algorithm == Algorithm.SHA1) {
-                    LOG.info(String.format("[Authenticate] User `%s`'s password is hashed using SHA1. Please use bcrypt hashing instead.", credentials.getUsername()));
+                    LOG.warn(String.format("[Authenticate] User `%s`'s password is hashed using SHA1. Please use bcrypt hashing instead.", credentials.getUsername()));
                 }
 
                 if (algorithm.matcher().matches(credentials.getPassword(), userDetails.password)) {
@@ -65,7 +65,8 @@ public class Authenticator {
                     return new User(userDetails.username, userDetails.username, null);
                 }
             } catch (Exception e) {
-                LOG.error(String.format("[Authenticate] Error authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()), e);
+                LOG.info(String.format("[Authenticate] Failed to authenticate user: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()));
+                LOG.debug("Exception: ", e);
             }
         }
 

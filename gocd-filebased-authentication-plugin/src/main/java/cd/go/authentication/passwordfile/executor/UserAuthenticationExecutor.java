@@ -59,7 +59,8 @@ public class UserAuthenticationExecutor implements RequestExecutor {
 
             return new DefaultGoPluginApiResponse(SUCCESS_RESPONSE_CODE, GSON.toJson(userMap));
         } catch (AuthenticationException e) {
-            LOG.error(String.format("[Authenticate] Failed to authenticate user: `%s`", credentials.getUsername()), e);
+            LOG.info("[Authenticate] Failed to authenticate user: " + credentials.getUsername() + ".");
+            LOG.debug(String.format("[Authenticate] Failed to authenticate user: `%s`", credentials.getUsername()), e);
             return new DefaultGoPluginApiResponse(SUCCESS_RESPONSE_CODE, GSON.toJson(userMap));
         }
     }
