@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+- [#34](https://github.com/gocd/gocd-filebased-authentication-plugin/pull/34) - Cleaner logs by default + Update dependencies for Java 9 and beyond
+
+  - Logs won't show stack traces by default for a failed authentication. Can turn on DEBUG logging to see stack traces.
+
 ## 1.0.2
 
 ### Bug fix
