@@ -34,7 +34,8 @@ public class GetCapabilitiesExecutorTest {
         String expectedJSON = "{\n" +
                 "    \"supported_auth_type\":\"password\",\n" +
                 "    \"can_search\":true,\n" +
-                "    \"can_authorize\":false\n" +
+                "    \"can_authorize\":false,\n" +
+                "    \"can_get_user_roles\":false\n" +
                 "}";
 
         JSONAssert.assertEquals(expectedJSON, response.responseBody(), true);
