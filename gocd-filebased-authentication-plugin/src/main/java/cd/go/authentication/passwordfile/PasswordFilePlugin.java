@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ThoughtWorks, Inc.
+ * Copyright 2019 ThoughtWorks, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,8 @@ public class PasswordFilePlugin implements GoPlugin {
                     return new UserAuthenticationExecutor(request, new Authenticator()).execute();
                 case REQUEST_SEARCH_USERS:
                     return new SearchUserExecutor(request).execute();
+                case REQUEST_DOES_USER_EXISTS:
+                    return new DoesUserExistsExecutor(request).execute();
                 default:
                     throw new UnhandledRequestTypeException(request.requestName());
             }
