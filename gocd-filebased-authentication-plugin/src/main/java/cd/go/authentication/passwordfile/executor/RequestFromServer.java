@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ThoughtWorks, Inc.
+ * Copyright 2019 ThoughtWorks, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,9 @@ public enum RequestFromServer {
     REQUEST_VERIFY_CONNECTION(String.join(".", Constants.REQUEST_PREFIX, Constants._AUTH_CONFIG_METADATA, "verify-connection")),
 
     REQUEST_AUTHENTICATE_USER(Constants.REQUEST_PREFIX + ".authenticate-user"),
-    REQUEST_SEARCH_USERS(Constants.REQUEST_PREFIX + ".search-users");
+    REQUEST_SEARCH_USERS(Constants.REQUEST_PREFIX + ".find-users"),
+
+    REQUEST_DOES_USER_EXISTS(Constants.REQUEST_PREFIX + ".does-user-exists");
 
     private final String requestName;
 
