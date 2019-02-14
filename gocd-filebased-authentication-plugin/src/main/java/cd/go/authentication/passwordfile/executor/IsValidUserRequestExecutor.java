@@ -31,15 +31,15 @@ import java.util.Properties;
 
 import static cd.go.authentication.passwordfile.utils.Util.GSON;
 
-public class DoesUserExistsExecutor implements RequestExecutor {
+public class IsValidUserRequestExecutor implements RequestExecutor {
     private final GoPluginApiRequest request;
     private PasswordFileReader passwordFileReader;
 
-    public DoesUserExistsExecutor(GoPluginApiRequest request) {
+    public IsValidUserRequestExecutor(GoPluginApiRequest request) {
         this(request, new PasswordFileReader());
     }
 
-    protected DoesUserExistsExecutor(GoPluginApiRequest request, PasswordFileReader passwordFileReader) {
+    protected IsValidUserRequestExecutor(GoPluginApiRequest request, PasswordFileReader passwordFileReader) {
         this.request = request;
         this.passwordFileReader = passwordFileReader;
     }

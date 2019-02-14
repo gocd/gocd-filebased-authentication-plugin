@@ -29,7 +29,7 @@ public enum RequestFromServer {
     REQUEST_AUTHENTICATE_USER(Constants.REQUEST_PREFIX + ".authenticate-user"),
     REQUEST_SEARCH_USERS(Constants.REQUEST_PREFIX + ".find-users"),
 
-    REQUEST_DOES_USER_EXISTS(Constants.REQUEST_PREFIX + ".does-user-exists");
+    REQUEST_IS_VALID_USER(Constants.REQUEST_PREFIX + ".is-valid-user");
 
     private final String requestName;
 

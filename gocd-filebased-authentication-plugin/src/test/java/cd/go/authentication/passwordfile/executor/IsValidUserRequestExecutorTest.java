@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DoesUserExistsExecutorTest {
+public class IsValidUserRequestExecutorTest {
 
     private PasswordFileReader fileReader;
 
@@ -47,7 +47,7 @@ public class DoesUserExistsExecutorTest {
         when(fileReader.read("/var/etc/password.properties")).thenReturn(properties);
         when(request.requestBody()).thenReturn(requestJson("bob"));
 
-        final GoPluginApiResponse response = new DoesUserExistsExecutor(request, fileReader).execute();
+        final GoPluginApiResponse response = new IsValidUserRequestExecutor(request, fileReader).execute();
 
         assertThat(response.responseCode(), is(200));
     }
@@ -61,7 +61,7 @@ public class DoesUserExistsExecutorTest {
         when(fileReader.read("/var/etc/password.properties")).thenReturn(properties);
         when(request.requestBody()).thenReturn(requestJson("john"));
 
-        final GoPluginApiResponse response = new DoesUserExistsExecutor(request, fileReader).execute();
+        final GoPluginApiResponse response = new IsValidUserRequestExecutor(request, fileReader).execute();
 
         assertThat(response.responseCode(), is(404));
     }
@@ -75,7 +75,7 @@ public class DoesUserExistsExecutorTest {
         when(fileReader.read("/var/etc/password.properties")).thenReturn(properties);
         when(request.requestBody()).thenReturn(requestJson("bob"));
 
-        final GoPluginApiResponse response = new DoesUserExistsExecutor(request, fileReader).execute();
+        final GoPluginApiResponse response = new IsValidUserRequestExecutor(request, fileReader).execute();
 
         assertThat(response.responseCode(), is(404));
     }
@@ -89,7 +89,7 @@ public class DoesUserExistsExecutorTest {
         when(fileReader.read("/var/etc/password.properties")).thenReturn(properties);
         when(request.requestBody()).thenReturn(requestJson("BoB"));
 
-        final GoPluginApiResponse response = new DoesUserExistsExecutor(request, fileReader).execute();
+        final GoPluginApiResponse response = new IsValidUserRequestExecutor(request, fileReader).execute();
 
         assertThat(response.responseCode(), is(200));
     }
