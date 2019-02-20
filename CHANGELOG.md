@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.0
+
+* [[Authroization Extension v2](https://github.com/gocd/gocd-filebased-authentication-plugin/commit/bc6d5c4d62e80a25af6df80887824d2a5ac2c428)] Implement authorization extension v2 to support:
+  - 'get-user-roles' capabilities
+  - 'is-valid-user' authorization extension request
+
 ## 1.0.3
 
 - [#34](https://github.com/gocd/gocd-filebased-authentication-plugin/pull/34) - Cleaner logs by default + Update dependencies for Java 9 and beyond
