@@ -13,128 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-  id 'co.riiid.gradle' version '0.4.2'
-}
 
-def gitRevision = { ->
-  def hashStdOut = new ByteArrayOutputStream()
-  exec {
-    commandLine "git", "log", "-n", "1", "--format=%H"
-    standardOutput = hashStdOut
+apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 60)}"
+
+gocdPlugin {
+  id = 'cd.go.authentication.passwordfile'
+  pluginVersion = '2.0.0'
+  goCdVersion = '18.1.0'
+  name = 'Password File Authentication Plugin for GoCD'
+  description = 'GoCD Authorization plugin for file based password authentication'
+  vendorName = 'ThoughtWorks, Inc.'
+  vendorUrl = 'https://github.com/gocd/filebased-authentication-plugin'
+
+  githubRepo {
+    owner = System.getenv('GITHUB_USER') ?: 'bob'
+    repo = 'filebased-authentication-plugin'
+    token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
   }
 
-  return hashStdOut.toString().trim()
+  pluginProject = project(':gocd-filebased-authentication-plugin')
+
+  prerelease = !"No".equalsIgnoreCase(System.getenv('PRERELEASE'))
+  assetsToRelease = [project(':gocd-filebased-authentication-plugin').tasks.jar]
 }
-
-def releaseRevision = { ->
-  def hashStdOut = new ByteArrayOutputStream()
-  exec {
-    commandLine "git", "log", "--pretty=format:"
-    standardOutput = hashStdOut
-  }
-
-  return hashStdOut.size().toString()
-}
-
-def PLUGIN_VERSION = '2.0.0'
-def DIST_VERSION = releaseRevision()
-def GIT_REVISION = gitRevision()
 
 allprojects {
-  project.ext.distVersion = DIST_VERSION
-  project.ext.fullVersion = DIST_VERSION ? "${PLUGIN_VERSION}-${DIST_VERSION}" : PLUGIN_VERSION
-  project.ext.gitRevision = GIT_REVISION
-  project.ext.pluginDesc = [
-    id         : 'cd.go.authentication.passwordfile',
-    version    : project.fullVersion,
-    goCdVersion: '18.1.0',
-    name       : 'Password File Authentication Plugin for GoCD',
-    description: 'GoCD Authorization plugin for file based password authentication',
-    vendorName : 'GoCD Contributors',
-    vendorUrl  : 'https://github.com/gocd/filebased-authentication-plugin'
-  ]
-
   group = 'cd.go'
-  version = project.fullVersion
+  version = gocdPlugin.fullVersion(project)
 }
 
 subprojects {
-  apply plugin: 'java'
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-
   repositories {
     jcenter()
     mavenLocal()
   }
-
-  tasks.withType(Jar) { jarTask ->
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-
-    ['MD5', 'SHA1', 'SHA-256'].each { algo ->
-      jarTask.outputs.files("${jarTask.archivePath}.${algo}")
-      jarTask.doLast {
-        ant.checksum file: jarTask.archivePath, format: 'MD5SUM', algorithm: algo
-      }
-    }
-
-    manifest {
-      attributes(
-        'Go-Version': project.pluginDesc.goCdVersion,
-        'Plugin-Revision': project.pluginDesc.version,
-        'Implementation-Title': project.name,
-        'Implementation-Version': project.version,
-        'Source-Compatibility': project.sourceCompatibility,
-        'Target-Compatibility': project.targetCompatibility
-      )
-    }
-  }
-
-  tasks.withType(JavaCompile) { compileTask ->
-    options.encoding = "UTF-8"
-  }
-
-  tasks.withType(Test) {
-    outputs.upToDateWhen { false }
-    testLogging {
-      showStandardStreams = project.path != ':server'
-
-      exceptionFormat 'full'
-
-      beforeSuite { suite ->
-        if (suite.parent) {
-          logger.quiet("Running ${suite.name}")
-        }
-      }
-
-      afterSuite { suite, result ->
-        if (suite.parent) {
-          logger.quiet("Tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
-          if (result.resultType == TestResult.ResultType.FAILURE) {
-            logger.quiet("Test ${suite.name} FAILED")
-          }
-        } else {
-          logger.quiet("Total tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}, Time elapsed: ${(result.endTime - result.startTime) / 1000.00} sec")
-        }
-      }
-    }
-  }
-}
-
-github {
-  owner = System.getenv('GITHUB_USER') ?: 'bob'
-  repo = 'gocd-filebased-authentication-plugin'
-  token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
-  tagName = PLUGIN_VERSION
-  name = PLUGIN_VERSION
-  targetCommitish = project.gitRevision
-  body = """
-      # Version ${fullVersion}
-
-      See release notes at https://github.com/${github.owner}/${github.repo}/blob/master/CHANGELOG.md#${github.tagName.replaceAll(/[^A-Za-z0-9]/, '')}
-    """.stripIndent().trim()
-
-  assets = project(':gocdpasswd').jar.outputs.files.files + project(':gocd-filebased-authentication-plugin').jar.outputs.files.files
 }

@@ -27,18 +27,6 @@ dependencies {
   testCompile group: 'org.skyscreamer', name: 'jsonassert', version: '1.4.0'
 }
 
-processResources {
-  from("src/main/resource-templates") {
-    filesMatching('plugin.xml') {
-      expand project.pluginDesc
-    }
-
-    filesMatching('plugin.properties') {
-      expand project.pluginDesc
-    }
-  }
-}
-
 jar {
 
   from(configurations.compile) {

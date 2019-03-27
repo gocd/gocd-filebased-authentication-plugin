@@ -12,3 +12,4 @@ build/
 
 classes/
 out/
+gocd-filebased-authentication-plugin/src/main/resources-generated/
