@@ -16,7 +16,7 @@ The plugin uses the popular file format used by the `htpasswd` program:
 
     username:hashed-password
 
-The plugin currently supports passwords hashed using `bcrypt`, `PBKDF2` and `SHA1`. See [#13](https://github.com/gocd/filebased-authentication-plugin/issues/13) for details.
+The plugin currently supports passwords hashed using `bcrypt`, `PBKDF2` and `SHA1`. See [#13](https://github.com/gocd/gocd-filebased-authentication-plugin/issues/13) for details.
 
 > **Note**: It is highly recommended that users use passwords hashed using `bcrypt` and not `SHA1`.
 
@@ -24,7 +24,7 @@ You can put as many username/hashed password pairs as you like -- use a new line
 
 ## Generating password using cli-app
 
-You can use the [gocd-passwd](https://github.com/gocd/filebased-authentication-plugin/tree/master/gocdpasswd) to generate hashed password file entry.
+You can use the [gocd-passwd](https://github.com/gocd/gocd-filebased-authentication-plugin/tree/master/gocdpasswd) to generate hashed password file entry.
 
 Use the following command to generate bcrypt hashed password file entry,  
 

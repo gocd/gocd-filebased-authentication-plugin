@@ -23,11 +23,11 @@ gocdPlugin {
   name = 'Password File Authentication Plugin for GoCD'
   description = 'GoCD Authorization plugin for file based password authentication'
   vendorName = 'ThoughtWorks, Inc.'
-  vendorUrl = 'https://github.com/gocd/filebased-authentication-plugin'
+  vendorUrl = 'https://github.com/gocd/gocd-filebased-authentication-plugin'
 
   githubRepo {
     owner = System.getenv('GITHUB_USER') ?: 'bob'
-    repo = 'filebased-authentication-plugin'
+    repo = 'gocd-filebased-authentication-plugin'
     token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
   }
 
