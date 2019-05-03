@@ -47,19 +47,25 @@ public class Authenticator {
             LOG.debug(String.format("[Authenticate] Authenticating User: %s using auth_config: %s", credentials.getUsername(), authConfig.getId()));
             try {
                 final String passwordFilePath = authConfig.getConfiguration().getPasswordFilePath();
+                LOG.debug(String.format("[Authenticate] Fetching all user information from password file: %s", passwordFilePath));
                 Map<String, UserDetails> userMap = buildUserMap(passwordFileReader.read(passwordFilePath));
+                LOG.debug("[Authenticate] Done fetching all user information from password file.");
                 UserDetails userDetails = userMap.get(credentials.getUsername().toLowerCase());
 
                 if (userDetails == null) {
+                    LOG.debug(String.format("[Authenticate] No user found with username: %s in auth config %s.", credentials.getUsername(), authConfig.getId()));
                     continue;
                 }
 
+                LOG.debug(String.format("[Authenticate] Finding algorithm used for hashing password of user %s.", userDetails.username));
                 Algorithm algorithm = algorithmIdentifier.identify(userDetails.password);
+                LOG.debug(String.format("[Authenticate] Algorithm found: %s.", algorithm.getName()));
 
                 if (algorithm == Algorithm.SHA1) {
                     LOG.warn(String.format("[Authenticate] User `%s`'s password is hashed using SHA1. Please use bcrypt hashing instead.", credentials.getUsername()));
                 }
 
+                LOG.debug("[Authenticate] Start matching input password with hashed password.");
                 if (algorithm.matcher().matches(credentials.getPassword(), userDetails.password)) {
                     LOG.info(String.format("[Authenticate] User `%s` successfully authenticated using auth config: %s", credentials.getUsername(), authConfig.getId()));
                     return new User(userDetails.username, userDetails.username, null);
