@@ -15,7 +15,7 @@
  */
 
 dependencies {
-  compile group: 'com.beust', name: 'jcommander', version: '1.72'
+  compile group: 'com.beust', name: 'jcommander', version: '1.78'
   compile project(':bcrypt')
   compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 

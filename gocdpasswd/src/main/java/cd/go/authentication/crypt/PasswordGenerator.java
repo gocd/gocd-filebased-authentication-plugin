@@ -51,12 +51,10 @@ public class PasswordGenerator {
     }
 
     void printUsageAndExit(int exitCode, CliArguments cliArguments) {
-        StringBuilder out = new StringBuilder();
 
         JCommander jCommander = new JCommander(cliArguments);
         jCommander.setProgramName("java -jar " + jarName());
-        jCommander.usage(out);
-        System.err.println(out);
+        jCommander.usage();
         System.exit(exitCode);
     }
 
