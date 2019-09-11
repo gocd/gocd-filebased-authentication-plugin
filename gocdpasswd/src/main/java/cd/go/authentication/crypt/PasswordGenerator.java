@@ -16,6 +16,7 @@
 
 package cd.go.authentication.crypt;
 
+import com.beust.jcommander.DefaultUsageFormatter;
 import com.beust.jcommander.JCommander;
 
 import java.io.File;
@@ -50,12 +51,31 @@ public class PasswordGenerator {
         System.out.println(hash);
     }
 
-    void printUsageAndExit(int exitCode, CliArguments cliArguments) {
+    private static void echo(String message) {
+        System.out.println(message);
+    }
 
-        JCommander jCommander = new JCommander(cliArguments);
-        jCommander.setProgramName("java -jar " + jarName());
-        jCommander.usage();
+    private static void     error(String message) {
+        System.err.println(message);
+    }
+
+    private static void die(int exitCode, String message) {
+        if (exitCode != 0) {
+            error(message);
+        } else {
+            echo(message);
+        }
         System.exit(exitCode);
+    }
+
+    private void printUsageAndExit(int exitCode, CliArguments cliArguments) {
+        StringBuilder out = new StringBuilder();
+        JCommander jCommander = new JCommander(cliArguments);
+
+        DefaultUsageFormatter defaultUsageFormatter = new DefaultUsageFormatter(jCommander);
+        jCommander.setProgramName("java -jar " + jarName());
+        defaultUsageFormatter.usage(out);
+        die(exitCode, out.toString());
     }
 
     private String jarName() {
