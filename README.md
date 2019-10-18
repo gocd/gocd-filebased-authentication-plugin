@@ -124,10 +124,10 @@ Edit the file `wrapper-properties.conf` on your GoCD server and add the followin
 wrapper.java.additional.100=-Dplugin.cd.go.authentication.passwordfile.log.level=debug
 ```
 
-If you're running with GoCD server 19.6 and above on docker using one of the supported GoCD server images, set the environment variable `GOCD_SERVER_JVM_OPTIONS`:
+If you're running with GoCD server 19.6 and above on docker using one of the supported GoCD server images, set the environment variable `GOCD_SERVER_JVM_OPTS`:
 
  ```shell
-docker run -e "GOCD_SERVER_JVM_OPTIONS=-Dplugin.cd.go.authentication.passwordfile.log.level=debug" ...
+docker run -e "GOCD_SERVER_JVM_OPTS=-Dplugin.cd.go.authentication.passwordfile.log.level=debug" ...
 ```
 
 #### If you are on GoCD version 19.5 and lower:
