@@ -34,7 +34,10 @@ gocdPlugin {
   pluginProject = project(':gocd-filebased-authentication-plugin')
 
   prerelease = !"No".equalsIgnoreCase(System.getenv('PRERELEASE'))
-  assetsToRelease = [project(':gocd-filebased-authentication-plugin').tasks.jar]
+  assetsToRelease = [
+    project(':gocd-filebased-authentication-plugin').tasks.findByName('jar'),
+    project(':gocdpasswd').tasks.findByName('jar')
+  ]
 }
 
 allprojects {
