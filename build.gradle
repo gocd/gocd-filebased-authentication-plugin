@@ -44,7 +44,7 @@ allprojects {
 
 subprojects {
   repositories {
-    jcenter()
+    mavenCentral()
     mavenLocal()
   }
 }
