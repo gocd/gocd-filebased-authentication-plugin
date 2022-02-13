@@ -18,10 +18,10 @@ package cd.go.authentication.passwordfile.executor;
 
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import org.hamcrest.CoreMatchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GetCapabilitiesExecutorTest {
 

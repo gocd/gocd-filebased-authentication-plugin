@@ -23,12 +23,12 @@ import cd.go.authentication.passwordfile.model.Credentials;
 import cd.go.authentication.passwordfile.model.User;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +36,7 @@ public class UserAuthenticationExecutorTest {
 
     private Authenticator authenticator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         authenticator = mock(Authenticator.class);
     }

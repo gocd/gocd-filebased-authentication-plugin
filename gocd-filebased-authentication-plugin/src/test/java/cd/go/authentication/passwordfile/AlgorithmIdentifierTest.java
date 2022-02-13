@@ -18,17 +18,18 @@ package cd.go.authentication.passwordfile;
 
 import cd.go.authentication.passwordfile.crypt.Algorithm;
 import cd.go.authentication.passwordfile.exception.NoSuchAlgorithmException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AlgorithmIdentifierTest {
 
     private AlgorithmIdentifier algorithmIdentifier;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         algorithmIdentifier = new AlgorithmIdentifier();
     }
@@ -61,9 +62,9 @@ public class AlgorithmIdentifierTest {
         assertThat(algorithmIdentifier.identify("$pbkdf2withhmacsha256$...$..."), is(Algorithm.PBKDF2WithHmacSHA256));
     }
 
-    @Test(expected = NoSuchAlgorithmException.class)
+    @Test
     public void shouldErrorOutIfItFailedToDetectAlgorithm() throws Exception {
-        algorithmIdentifier.identify("$foo");
+        assertThrows(NoSuchAlgorithmException.class, () -> algorithmIdentifier.identify("$foo"));
     }
 
 }

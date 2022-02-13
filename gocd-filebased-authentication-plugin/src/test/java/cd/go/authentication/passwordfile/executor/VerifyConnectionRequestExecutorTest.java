@@ -18,18 +18,19 @@ package cd.go.authentication.passwordfile.executor;
 
 import com.thoughtworks.go.plugin.api.request.DefaultGoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 
 public class VerifyConnectionRequestExecutorTest {
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    @TempDir
+    Path tempDir;
 
     @Test
     public void execute_shouldValidateTheConfiguration() throws Exception {
@@ -55,23 +56,23 @@ public class VerifyConnectionRequestExecutorTest {
 
     @Test
     public void execute_shouldVerifyIfPasswordFilePathPointsToANormalFile() throws Exception {
-        File folder = this.folder.newFolder("subfolder");
+        Path folder = Files.createDirectory(tempDir.resolve("subfolder"));
 
         DefaultGoPluginApiRequest request = new DefaultGoPluginApiRequest(null, null, null);
-        request.setRequestBody(String.format("{\"PasswordFilePath\": \"%s\"}", folder.getAbsolutePath()));
+        request.setRequestBody(String.format("{\"PasswordFilePath\": \"%s\"}", folder.toAbsolutePath()));
 
         GoPluginApiResponse response = new VerifyConnectionRequestExecutor(request).execute();
 
-        String expectedResponse = String.format("{\"message\":\"Password file path `%s` is not a normal file.\",\"status\":\"failure\"}", folder.getAbsolutePath());
+        String expectedResponse = String.format("{\"message\":\"Password file path `%s` is not a normal file.\",\"status\":\"failure\"}", folder.toAbsolutePath());
         assertThat(response.responseBody(), is(expectedResponse));
     }
 
     @Test
     public void execute_shouldReturnASuccessResponseIfValidationAndVerificationPasses() throws Exception {
-        File passwordFile = this.folder.newFile("password.properties");
+        Path passwordFile = Files.createFile(this.tempDir.resolve("password.properties"));
 
         DefaultGoPluginApiRequest request = new DefaultGoPluginApiRequest(null, null, null);
-        request.setRequestBody(String.format("{\"PasswordFilePath\": \"%s\"}", passwordFile.getAbsolutePath()));
+        request.setRequestBody(String.format("{\"PasswordFilePath\": \"%s\"}", passwordFile.toAbsolutePath()));
 
         GoPluginApiResponse response = new VerifyConnectionRequestExecutor(request).execute();
 

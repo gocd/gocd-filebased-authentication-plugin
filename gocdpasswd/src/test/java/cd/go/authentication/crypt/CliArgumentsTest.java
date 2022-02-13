@@ -17,22 +17,18 @@
 package cd.go.authentication.crypt;
 
 import com.beust.jcommander.ParameterException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CliArgumentsTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
-    public void shouldParsePBKDF2CliArgumentsToObject() throws Exception {
+    public void shouldParsePBKDF2CliArgumentsToObject() {
         String[] args = {"-P", "-u", "admin", "-p", "badger", "-i", "2000", "-l", "64", "-s", "812A9B665D09904B8239778EC8D18CF7"};
 
         final CliArguments arguments = CliArguments.fromArgs(args);
@@ -46,7 +42,7 @@ public class CliArgumentsTest {
     }
 
     @Test
-    public void shouldParseBCryptCliArgumentsToObject() throws Exception {
+    public void shouldParseBCryptCliArgumentsToObject() {
         String[] args = {"-B", "-u", "admin", "-p", "badger", "-C", "10"};
 
         final CliArguments arguments = CliArguments.fromArgs(args);
@@ -58,37 +54,31 @@ public class CliArgumentsTest {
     }
 
     @Test
-    public void shouldErrorOutEncryptionAlgorithmIsNotSpecified() throws Exception {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Expected encryption algorithm: [-B, -P, -S]");
-
+    public void shouldErrorOutEncryptionAlgorithmIsNotSpecified() {
         String[] args = {"-u", "admin", "-p", "badger"};
 
-        CliArguments.fromArgs(args);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> CliArguments.fromArgs(args));
+        assertThat(exception.getMessage(), is("Expected encryption algorithm: [-B, -P, -S]"));
     }
 
     @Test
-    public void shouldErrorOutOnInvalidBCryptArguments() throws Exception {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument to -C must be an integer value: 4 to 31");
-
+    public void shouldErrorOutOnInvalidBCryptArguments() {
         String[] args = {"-B", "-u", "admin", "-p", "badger", "-C", "1"};
 
-        CliArguments.fromArgs(args);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> CliArguments.fromArgs(args));
+        assertThat(exception.getMessage(), is("Argument to -C must be an integer value: 4 to 31"));
     }
 
     @Test
-    public void shouldErrorOutIfRequiredOptionsMissingInCliArguments() throws Exception {
-        thrown.expect(ParameterException.class);
-        thrown.expectMessage("The following option is required: [-u]");
-
+    public void shouldErrorOutIfRequiredOptionsMissingInCliArguments() {
         String[] args = {"-p", "badger"};
 
-        CliArguments.fromArgs(args);
+        Exception exception = assertThrows(ParameterException.class, () -> CliArguments.fromArgs(args));
+        assertThat(exception.getMessage(), is("The following option is required: [-u]"));
     }
 
     @Test
-    public void shouldPromptForPasswordIfNotProvidedAsArgument() throws Exception {
+    public void shouldPromptForPasswordIfNotProvidedAsArgument() {
         final PasswordReader passwordReader = mock(PasswordReader.class);
         when(passwordReader.readPassword()).thenReturn("password-from-cli");
 

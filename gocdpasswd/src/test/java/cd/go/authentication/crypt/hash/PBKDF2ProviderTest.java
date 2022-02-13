@@ -18,11 +18,11 @@ package cd.go.authentication.crypt.hash;
 
 import cd.go.authentication.crypt.Algorithm;
 import cd.go.authentication.crypt.CliArguments;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +31,7 @@ public class PBKDF2ProviderTest {
     private PBKDF2Provider provider;
     private CliArguments cliArguments;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         provider = new PBKDF2Provider();
         cliArguments = mock(CliArguments.class);

@@ -18,19 +18,19 @@ package cd.go.authentication.crypt.hash;
 
 import cd.go.authentication.crypt.Algorithm;
 import cd.go.authentication.crypt.CliArguments;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class BCryptProviderTest {
     private CliArguments cliArguments;
     private BCryptProvider provider;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         provider = new BCryptProvider();
 
@@ -47,6 +47,6 @@ public class BCryptProviderTest {
 
         final String hash = provider.hash(cliArguments);
 
-        assertThat(hash,startsWith("admin=$2a$06$"));
+        assertThat(hash, startsWith("admin=$2a$06$"));
     }
 }

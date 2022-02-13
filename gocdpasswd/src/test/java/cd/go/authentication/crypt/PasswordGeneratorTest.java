@@ -16,7 +16,7 @@
 
 package cd.go.authentication.crypt;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.startsWith;
 import static org.mockito.Mockito.spy;

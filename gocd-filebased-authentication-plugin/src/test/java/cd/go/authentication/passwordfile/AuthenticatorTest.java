@@ -21,17 +21,16 @@ import cd.go.authentication.passwordfile.exception.AuthenticationException;
 import cd.go.authentication.passwordfile.model.AuthConfig;
 import cd.go.authentication.passwordfile.model.Credentials;
 import cd.go.authentication.passwordfile.model.User;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class AuthenticatorTest {
@@ -39,11 +38,9 @@ public class AuthenticatorTest {
     private Authenticator authenticator;
     private PasswordFileReader passwordFileReader;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
     private AlgorithmIdentifier algorithmIdentifier;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         passwordFileReader = mock(PasswordFileReader.class);
         algorithmIdentifier = spy(new AlgorithmIdentifier());
@@ -66,7 +63,7 @@ public class AuthenticatorTest {
         assertThat(user, is(new User("username", "username", null)));
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void shouldErrorOutIfFailedToAuthenticateUsingSHA1() throws Exception {
         Credentials credentials = new Credentials("username", "badger");
         AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
@@ -76,7 +73,8 @@ public class AuthenticatorTest {
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
         when(algorithmIdentifier.identify("W6ph5Mm5Pz8GgiULbPgzG37mj9g=")).thenReturn(Algorithm.SHA1);
 
-        authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+        assertThrows(AuthenticationException.class,
+                () -> authenticator.authenticate(credentials, Collections.singletonList(authConfig)));
     }
 
     @Test
@@ -124,7 +122,7 @@ public class AuthenticatorTest {
         assertThat(user, is(new User("username", "username", null)));
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void shouldErrorOutIfFailedToAuthenticateUsingBCrypt() throws Exception {
         Credentials credentials = new Credentials("username", "badger");
         AuthConfig authConfig = AuthConfigMother.authConfigWith("/var/etc/password.properties");
@@ -134,7 +132,8 @@ public class AuthenticatorTest {
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
         when(algorithmIdentifier.identify("$2b$12$GhvMmNVjRW29ulnudl.LbuAnUtN/LRfe1JsBm1Xu6LE3059z5Tr8m")).thenReturn(Algorithm.BCRYPT);
 
-        authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+        assertThrows(AuthenticationException.class,
+                () -> authenticator.authenticate(credentials, Collections.singletonList(authConfig)));
     }
 
     @Test
@@ -159,7 +158,7 @@ public class AuthenticatorTest {
         assertThat(user, is(new User("username", "username", null)));
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void shouldErrorOutIfFailedToAuthenticateUsingPBKDF2WithHmacSHA1() throws Exception {
         final String hashed = new StringBuilder()
                 .append("$PBKDF2WithHmacSHA1")
@@ -176,7 +175,8 @@ public class AuthenticatorTest {
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
         when(algorithmIdentifier.identify(hashed)).thenReturn(Algorithm.PBKDF2WithHmacSHA1);
 
-        authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+        assertThrows(AuthenticationException.class,
+                () -> authenticator.authenticate(credentials, Collections.singletonList(authConfig)));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class AuthenticatorTest {
         assertThat(user, is(new User("username", "username", null)));
     }
 
-    @Test(expected = AuthenticationException.class)
+    @Test
     public void shouldErrorOutIfFailedToAuthenticateUsingPBKDF2WithHmacSHA256() throws Exception {
         final String hashed = new StringBuilder()
                 .append("$PBKDF2WithHmacSHA256")
@@ -218,7 +218,8 @@ public class AuthenticatorTest {
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
         when(algorithmIdentifier.identify(hashed)).thenReturn(Algorithm.PBKDF2WithHmacSHA256);
 
-        authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+        assertThrows(AuthenticationException.class,
+                () -> authenticator.authenticate(credentials, Collections.singletonList(authConfig)));
     }
 
     @Test
@@ -258,10 +259,9 @@ public class AuthenticatorTest {
         properties.put("username", "invalid-password");
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
 
-        thrown.expect(AuthenticationException.class);
-        thrown.expectMessage("Unable to authenticate user, user not found or bad credentials");
-
-        authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+        Exception exception = assertThrows(AuthenticationException.class,
+                () -> authenticator.authenticate(credentials, Collections.singletonList(authConfig)));
+        assertThat(exception.getMessage(), is("Unable to authenticate user, user not found or bad credentials"));
     }
 
     @Test
@@ -272,10 +272,9 @@ public class AuthenticatorTest {
         final Properties properties = new Properties();
         when(passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath())).thenReturn(properties);
 
-        thrown.expect(AuthenticationException.class);
-        thrown.expectMessage("Unable to authenticate user, user not found or bad credentials");
-
-        authenticator.authenticate(credentials, Collections.singletonList(authConfig));
+        Exception exception = assertThrows(AuthenticationException.class,
+                () -> authenticator.authenticate(credentials, Collections.singletonList(authConfig)));
+        assertThat(exception.getMessage(), is("Unable to authenticate user, user not found or bad credentials"));
     }
 
     @Test

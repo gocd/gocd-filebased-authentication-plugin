@@ -18,10 +18,11 @@ package cd.go.authentication.passwordfile.crypt;
 
 import cd.go.authentication.passwordfile.AlgorithmIdentifier;
 import cd.go.authentication.passwordfile.exception.InvalidFormatException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,13 +49,13 @@ public class PBKDF2HashInfoTest {
         assertThat(info.getHashedPassword(), is("84b44c923afeaad550305e30aceee15f68cc3821f8394e3a3609d5b06649f64b"));
     }
 
-    @Test(expected = InvalidFormatException.class)
+    @Test
     public void shouldErrorOutIfBadHashFormat() throws Exception {
         final String hashed = new StringBuilder()
                 .append("$PBKDF2WithHmacSHA256")
                 .append("$2000")
                 .append("$256").toString();
 
-        new PBKDF2HashInfo(hashed);
+        assertThrows(InvalidFormatException.class, () -> new PBKDF2HashInfo(hashed));
     }
 }

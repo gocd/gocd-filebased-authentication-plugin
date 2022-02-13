@@ -14,15 +14,17 @@
 
 package org.mindrot.jbcrypt;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * JUnit unit tests for BCrypt routines
  * @author Damien Miller
  * @version 0.2
  */
-public class TestBCrypt extends TestCase {
-	String test_vectors[][] = {
+public class TestBCrypt {
+	String[][] test_vectors = {
 			{ "",
 			"$2a$06$DCq7YPn5Rq63x1Lad4cll.",
 			"$2a$06$DCq7YPn5Rq63x1Lad4cll.TV4S6ytwfsfvkgY8jIucDrjc8deX1s." },
@@ -86,16 +88,9 @@ public class TestBCrypt extends TestCase {
 		};
 
 	/**
-	 * Entry point for unit tests
-	 * @param args unused
-	 */
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(TestBCrypt.class);
-	}
-
-	/**
 	 * Test method for 'BCrypt.hashpw(String, String)'
 	 */
+	@Test
 	public void testHashpw() {
 		System.out.print("BCrypt.hashpw(): ");
 		for (int i = 0; i < test_vectors.length; i++) {
@@ -106,16 +101,17 @@ public class TestBCrypt extends TestCase {
 			assertEquals(hashed, expected);
 			System.out.print(".");
 		}
-		System.out.println("");
+		System.out.println();
 	}
 
 	/**
 	 * Test method for 'BCrypt.gensalt(int)'
 	 */
+	@Test
 	public void testGensaltInt() {
 		System.out.print("BCrypt.gensalt(log_rounds):");
 		for (int i = 4; i <= 12; i++) {
-			System.out.print(" " + Integer.toString(i) + ":");
+			System.out.print(" " + i + ":");
 			for (int j = 0; j < test_vectors.length; j += 4) {
 				String plain = test_vectors[j][0];
 				String salt = BCrypt.gensalt(i);
@@ -125,12 +121,13 @@ public class TestBCrypt extends TestCase {
 				System.out.print(".");
 			}
 		}
-		System.out.println("");
+		System.out.println();
 	}
 
 	/**
 	 * Test method for 'BCrypt.gensalt()'
 	 */
+	@Test
 	public void testGensalt() {
 		System.out.print("BCrypt.gensalt(): ");
 		for (int i = 0; i < test_vectors.length; i += 4) {
@@ -141,13 +138,14 @@ public class TestBCrypt extends TestCase {
 			assertEquals(hashed1, hashed2);
 			System.out.print(".");
 		}
-		System.out.println("");
+		System.out.println();
 	}
 
 	/**
 	 * Test method for 'BCrypt.checkpw(String, String)'
 	 * expecting success
 	 */
+	@Test
 	public void testCheckpw_success() {
 		System.out.print("BCrypt.checkpw w/ good passwords: ");
 		for (int i = 0; i < test_vectors.length; i++) {
@@ -156,13 +154,14 @@ public class TestBCrypt extends TestCase {
 			assertTrue(BCrypt.checkpw(plain, expected));
 			System.out.print(".");
 		}
-		System.out.println("");
+		System.out.println();
 	}
 
 	/**
 	 * Test method for 'BCrypt.checkpw(String, String)'
 	 * expecting failure
 	 */
+	@Test
 	public void testCheckpw_failure() {
 		System.out.print("BCrypt.checkpw w/ bad passwords: ");
 		for (int i = 0; i < test_vectors.length; i++) {
@@ -172,12 +171,13 @@ public class TestBCrypt extends TestCase {
 			assertFalse(BCrypt.checkpw(plain, expected));
 			System.out.print(".");
 		}
-		System.out.println("");
+		System.out.println();
 	}
 
 	/**
 	 * Test for correct hashing of non-US-ASCII passwords
 	 */
+	@Test
 	public void testInternationalChars() {
 		System.out.print("BCrypt.hashpw w/ international chars: ");
 		String pw1 = "\u2605\u2605\u2605\u2605\u2605\u2605\u2605\u2605";
@@ -190,7 +190,7 @@ public class TestBCrypt extends TestCase {
 		String h2 = BCrypt.hashpw(pw2, BCrypt.gensalt());
 		assertFalse(BCrypt.checkpw(pw1, h2));
 		System.out.print(".");
-		System.out.println("");
+		System.out.println();
 	}
 
 }
