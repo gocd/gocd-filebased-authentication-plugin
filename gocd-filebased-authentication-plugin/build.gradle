@@ -15,7 +15,7 @@
  */
 
 dependencies {
-  compileOnly group: 'cd.go.plugin', name: 'go-plugin-api', version: '21.4.0'
+  compileOnly group: 'cd.go.plugin', name: 'go-plugin-api', version: '22.1.0'
   implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
   implementation project(':bcrypt')
   implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
