@@ -18,4 +18,7 @@
     <label ng-class="{'is-invalid-label': GOINPUTNAME[PasswordFilePath].$error.server}">Password file path:<span class='asterix'>*</span></label>
     <input ng-class="{'is-invalid-input': GOINPUTNAME[PasswordFilePath].$error.server}" type="text" ng-model="PasswordFilePath" ng-required="true" placeholder="/etc/go/password.properties"/>
     <span class="form_error form-error" ng-class="{'is-visible': GOINPUTNAME[PasswordFilePath].$error.server}" ng-show="GOINPUTNAME[PasswordFilePath].$error.server">{{GOINPUTNAME[PasswordFilePath].$error.server}}</span>
+    <label class="form-help-content">
+        Paths can either be absolute or relative to the server installation directory. e.g <code>config/password.properties</code> (POSIX) or <code>config\password.properties</code> (Windows).
+    </label>
 </div>
