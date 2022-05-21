@@ -20,7 +20,8 @@ import cd.go.authentication.crypt.CliArguments;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.xml.bind.DatatypeConverter;
+
+import java.nio.charset.StandardCharsets;
 
 import static java.lang.String.format;
 
@@ -32,11 +33,23 @@ public class PBKDF2Provider implements HashProvider {
             PBEKeySpec keySpec = new PBEKeySpec(cliArguments.password().toCharArray(), cliArguments.salt().getBytes(), cliArguments.iterations(), cliArguments.keyLength());
             SecretKeyFactory factory = SecretKeyFactory.getInstance(cliArguments.algorithm().getName());
 
-            final String hashedPasswd = DatatypeConverter.printHexBinary(factory.generateSecret(keySpec).getEncoded());
+            final String hashedPasswd = printHexBinary(factory.generateSecret(keySpec).getEncoded());
 
             return format("%s=$%s$%s$%s$%s$%s", cliArguments.username(), cliArguments.algorithm().getName(), cliArguments.iterations(), cliArguments.keyLength(), cliArguments.salt(), hashedPasswd);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+
+    private String printHexBinary(byte[] bytes) {
+        byte[] hexChars = new byte[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars, StandardCharsets.UTF_8);
     }
 }

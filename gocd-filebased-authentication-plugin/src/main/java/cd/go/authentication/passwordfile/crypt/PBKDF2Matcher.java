@@ -20,7 +20,7 @@ import cd.go.authentication.passwordfile.exception.AuthenticationException;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.StandardCharsets;
 
 public class PBKDF2Matcher implements HashMatcher {
 
@@ -38,9 +38,21 @@ public class PBKDF2Matcher implements HashMatcher {
             PBEKeySpec keySpec = new PBEKeySpec(plainText.toCharArray(), hashInfo.getSalt().getBytes(), hashInfo.getIterations(), hashInfo.getKeyLength());
             SecretKeyFactory factory = SecretKeyFactory.getInstance(hashInfo.getAlgorithm().getName());
 
-            return DatatypeConverter.printHexBinary(factory.generateSecret(keySpec).getEncoded());
+            return printHexBinary(factory.generateSecret(keySpec).getEncoded());
         } catch (Exception e) {
             throw new AuthenticationException(e);
         }
+    }
+
+    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+
+    private String printHexBinary(byte[] bytes) {
+        byte[] hexChars = new byte[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars, StandardCharsets.UTF_8);
     }
 }
