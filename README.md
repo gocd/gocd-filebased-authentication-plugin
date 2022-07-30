@@ -159,7 +159,7 @@ docker run -e "GOCD_SERVER_JVM_OPTS=-Dplugin.cd.go.authentication.passwordfile.l
 ## License
 
 ```plain
-Copyright 2017 ThoughtWorks, Inc.
+Copyright 2022 Thoughtworks, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

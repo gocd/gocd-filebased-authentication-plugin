@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 ThoughtWorks, Inc.
+ * Copyright 2022 Thoughtworks, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-help
 
 gocdPlugin {
   id = 'cd.go.authentication.passwordfile'
-  pluginVersion = '2.1.1'
+  pluginVersion = '2.1.2'
   goCdVersion = '20.9.0'
   name = 'Password File Authentication Plugin for GoCD'
   description = 'GoCD Authorization plugin for file based password authentication'
-  vendorName = 'ThoughtWorks, Inc.'
+  vendorName = 'Thoughtworks, Inc.'
   vendorUrl = 'https://github.com/gocd/gocd-filebased-authentication-plugin'
 
   githubRepo {
