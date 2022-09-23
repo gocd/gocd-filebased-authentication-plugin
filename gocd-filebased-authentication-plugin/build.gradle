@@ -20,7 +20,7 @@ dependencies {
   implementation project(':bcrypt')
 
   testImplementation group: 'cd.go.plugin', name: 'go-plugin-api', version: '22.1.0'
-  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.0'
+  testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.1'
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.9.0'
   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.0'
   testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.8.0'
