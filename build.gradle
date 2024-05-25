@@ -18,8 +18,8 @@ apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-help
 
 gocdPlugin {
   id = 'cd.go.authentication.passwordfile'
-  pluginVersion = '2.1.2'
-  goCdVersion = '20.9.0'
+  pluginVersion = '2.2.0'
+  goCdVersion = '22.1.0'
   name = 'Password File Authentication Plugin for GoCD'
   description = 'GoCD Authorization plugin for file based password authentication'
   vendorName = 'Thoughtworks, Inc.'
@@ -46,6 +46,11 @@ allprojects {
 }
 
 subprojects {
+  java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+
   repositories {
     mavenCentral()
     mavenLocal()
