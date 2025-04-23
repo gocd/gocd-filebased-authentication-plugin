@@ -32,7 +32,7 @@ import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
 public class SearchUserExecutor implements RequestExecutor {
     public static final String SEARCH_TERM = "search_term";
     private final GoPluginApiRequest request;
-    private PasswordFileReader passwordFileReader;
+    private final PasswordFileReader passwordFileReader;
 
     public SearchUserExecutor(GoPluginApiRequest request) {
         this(request, new PasswordFileReader());
@@ -45,7 +45,7 @@ public class SearchUserExecutor implements RequestExecutor {
 
     @Override
     public GoPluginApiResponse execute() throws Exception {
-        Map<String, String> requestParam = Util.GSON.fromJson(request.requestBody(), Map.class);
+        Map<String, String> requestParam = Util.GSON.<Map<String, String>>fromJson(request.requestBody(), Map.class);
         String searchTerm = requestParam.get(SEARCH_TERM);
         List<AuthConfig> authConfigs = AuthConfig.fromJSONList(request.requestBody());
 
@@ -54,7 +54,7 @@ public class SearchUserExecutor implements RequestExecutor {
         return new DefaultGoPluginApiResponse(200, Util.GSON.toJson(users));
     }
 
-    Set<User> searchUsers(String searchTerm, List<AuthConfig> authConfigs) throws IOException {
+    Set<User> searchUsers(String searchTerm, List<AuthConfig> authConfigs) {
         final HashSet<User> users = new HashSet<>();
         for (AuthConfig authConfig : authConfigs) {
             try {
@@ -70,8 +70,7 @@ public class SearchUserExecutor implements RequestExecutor {
 
     public Set<User> search(String searchText, AuthConfig authConfig) throws IOException {
         final Properties properties = passwordFileReader.read(authConfig.getConfiguration().getPasswordFilePath());
-        Set<User> users = findUserNameContaining(searchText, properties);
-        return users;
+        return findUserNameContaining(searchText, properties);
     }
 
     private Set<User> findUserNameContaining(String searchText, Properties properties) {
