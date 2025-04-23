@@ -32,7 +32,7 @@ import static cd.go.authentication.passwordfile.PasswordFilePlugin.LOG;
 public class SearchUserExecutor implements RequestExecutor {
     public static final String SEARCH_TERM = "search_term";
     private final GoPluginApiRequest request;
-    private PasswordFileReader passwordFileReader;
+    private final PasswordFileReader passwordFileReader;
 
     public SearchUserExecutor(GoPluginApiRequest request) {
         this(request, new PasswordFileReader());

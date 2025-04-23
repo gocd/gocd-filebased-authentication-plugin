@@ -30,7 +30,7 @@ public class GetAuthConfigMetadataExecutor implements RequestExecutor {
     private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public GoPluginApiResponse execute() throws Exception {
-        final List<ProfileMetadata> authConfigMetadata = MetadataHelper.getMetadata(Configuration.class);
+        final List<ProfileMetadata<?>> authConfigMetadata = MetadataHelper.getMetadata(Configuration.class);
         return new DefaultGoPluginApiResponse(200, GSON.toJson(authConfigMetadata));
     }
 }

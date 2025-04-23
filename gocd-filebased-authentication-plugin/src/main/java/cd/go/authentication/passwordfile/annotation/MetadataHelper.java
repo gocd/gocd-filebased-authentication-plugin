@@ -22,13 +22,13 @@ import java.util.*;
 
 public class MetadataHelper {
 
-    public static List<ProfileMetadata> getMetadata(Class<?> clazz) {
+    public static List<ProfileMetadata<?>> getMetadata(Class<?> clazz) {
         return buildMetadata(clazz);
     }
 
-    private static List<ProfileMetadata> buildMetadata(Class<?> clazz) {
+    private static List<ProfileMetadata<?>> buildMetadata(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        List<ProfileMetadata> metadata = new ArrayList<>();
+        List<ProfileMetadata<?>> metadata = new ArrayList<>();
         for (Field field : fields) {
             ProfileField profileField = field.getAnnotation(ProfileField.class);
             if (profileField != null) {
@@ -42,9 +42,9 @@ public class MetadataHelper {
 
     public static List<Map<String, String>> validate(Class<?> clazz, Map<String, String> configuration) {
         List<Map<String, String>> result = new ArrayList<>();
-        List<String> knownFields = new ArrayList<>();
+        Set<String> knownFields = new HashSet<>();
 
-        for (ProfileMetadata field : getMetadata(clazz)) {
+        for (ProfileMetadata<?> field : getMetadata(clazz)) {
             knownFields.add(field.getKey());
 
             Map<String, String> validationError = field.validate(configuration.get(field.getKey()));
@@ -54,18 +54,15 @@ public class MetadataHelper {
             }
         }
 
-
-        Set<String> set = new HashSet<>(configuration.keySet());
-        set.removeAll(knownFields);
-
-        if (!set.isEmpty()) {
-            for (String key : set) {
-                LinkedHashMap<String, String> validationError = new LinkedHashMap<>();
-                validationError.put("key", key);
-                validationError.put("message", "Is an unknown property");
-                result.add(validationError);
-            }
-        }
+        configuration.keySet()
+                .stream()
+                .filter(key -> !knownFields.contains(key))
+                .forEach(key -> {
+                    Map<String, String> validationError = new LinkedHashMap<>();
+                    validationError.put("key", key);
+                    validationError.put("message", "Is an unknown property");
+                    result.add(validationError);
+                });
         return result;
     }
 }
