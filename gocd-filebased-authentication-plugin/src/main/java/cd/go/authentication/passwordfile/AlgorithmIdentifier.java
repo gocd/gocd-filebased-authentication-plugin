@@ -20,7 +20,6 @@ import cd.go.authentication.passwordfile.crypt.Algorithm;
 import cd.go.authentication.passwordfile.exception.NoSuchAlgorithmException;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -28,11 +27,11 @@ import java.util.regex.Pattern;
 
 public class AlgorithmIdentifier {
     private static final Pattern PREFIX_PATTERN = Pattern.compile("\\$(\\w+)");
-    private static final Map<Algorithm, List<String>> ALGORITHM_IDENTIFIER_PREFIXS = new HashMap() {{
-        put(Algorithm.BCRYPT, Arrays.asList("2A", "2Y", "2B"));
-        put(Algorithm.PBKDF2WithHmacSHA1, Arrays.asList("PBKDF2WithHmacSHA1"));
-        put(Algorithm.PBKDF2WithHmacSHA256, Arrays.asList("PBKDF2WithHmacSHA256"));
-    }};
+    private static final Map<Algorithm, List<String>> ALGORITHM_IDENTIFIER_PREFIXES = Map.of(
+            Algorithm.BCRYPT, List.of("2A", "2Y", "2B"),
+            Algorithm.PBKDF2WithHmacSHA1, List.of("PBKDF2WithHmacSHA1"),
+            Algorithm.PBKDF2WithHmacSHA256, List.of("PBKDF2WithHmacSHA256")
+    );
 
     public Algorithm identify(String hash) {
         if (hash.startsWith("{SHA1}") || !hash.startsWith("$")) {
@@ -45,7 +44,7 @@ public class AlgorithmIdentifier {
 
                 return Arrays.stream(Algorithm.values())
                         .filter(elem -> {
-                            List<String> strings = ALGORITHM_IDENTIFIER_PREFIXS.get(elem);
+                            List<String> strings = ALGORITHM_IDENTIFIER_PREFIXES.get(elem);
                             return strings != null && strings.stream().anyMatch(algorithmPrefix::equalsIgnoreCase);
                         })
                         .findFirst()
