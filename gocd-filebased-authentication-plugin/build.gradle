@@ -24,7 +24,7 @@ ext {
 
 dependencies {
   compileOnly project.deps.gocdPluginApi
-  implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.1'
+  implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.2'
   implementation project(':bcrypt')
 
   testImplementation project.deps.gocdPluginApi
@@ -32,7 +32,7 @@ dependencies {
   testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params'
   testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine'
   testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher'
-  testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.19.0'
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.20.0'
   testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '3.0'
   testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.3'
 }
