@@ -24,7 +24,9 @@ ext {
 
 dependencies {
   compileOnly project.deps.gocdPluginApi
-  implementation 'com.google.code.gson:gson:2.13.2'
+  implementation('com.google.code.gson:gson:2.13.2') {
+    exclude module: 'error_prone_annotations'
+  }
   implementation project(':bcrypt')
 
   testImplementation project.deps.gocdPluginApi
