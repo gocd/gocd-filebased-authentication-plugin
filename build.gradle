@@ -52,6 +52,6 @@ subprojects {
     mavenLocal()
   }
   dependencies {
-    testImplementation platform('org.junit:junit-bom:6.0.2')
+    testImplementation platform('org.junit:junit-bom:6.0.3')
   }
 }
