@@ -15,7 +15,7 @@
  */
 
 dependencies {
-  implementation 'com.beust:jcommander:1.82'
+  implementation 'org.jcommander:jcommander:3.0'
   implementation project(':bcrypt')
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api'
